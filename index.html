@@ -270,7 +270,6 @@
 
 <script>
     // --- DATA ---
-    [cite_start]// Source: Element-16.pdf [cite: 12-54]
     var quizQuestions = [
         "1. I find it difficult to control how much I eat.",
         "2. I crash in the afternoon and have trouble waking up in the morning.",
@@ -355,7 +354,7 @@
     function showResults() {
         switchView('view-results');
 
-        [cite_start]// Scoring Logic: >6 in a category determines result [cite: 56-58]
+        // Scoring Logic: >6 in a category determines result
         var result = "Mixed"; 
         if (quizScores["Daily"] > 6) {
             result = "High";
@@ -370,11 +369,9 @@
 
         titleEl.innerText = result + " Susceptibility";
 
-        // Generate HTML with Dr. A's transparent photo
-        // Note: Using the transparent PNG version here
-        var html = '<img src="dra_transparent.png" alt="Dr. A" style="max-width: 150px; height: auto; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto;">';
+        // Generate HTML with Dr. A photo
+        var html = '<img src="dra.png" alt="Dr. A" style="max-width: 150px; height: auto; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto;">';
 
-        [cite_start]// Content logic derived from source documents [cite: 3-5, 29]
         if (result === "High") {
             html += '<p>According to the "rat lever" study, you are highly susceptible to cues. The cue itself has likely become the reward.</p>' +
                    '<div class="result-box">' +
