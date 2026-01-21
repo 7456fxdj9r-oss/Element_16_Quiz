@@ -6,8 +6,9 @@
     <title>Habits of Health Assessment</title>
     <style>
         :root {
-            --bg-beige: #F0EFEA;       /* Matches screenshot background */
-            --brand-rust: #C05A43;     /* The top border color */
+            /* Theme Colors */
+            --bg-beige: #F0EFEA;       
+            --brand-rust: #C05A43;     
             --brand-green: #7FAB56;    
             --text-dark: #333333;      
             --card-white: #FFFFFF;
@@ -25,7 +26,6 @@
             color: var(--text-dark);
         }
 
-        /* Main Card Container */
         .app-container {
             background: var(--card-white);
             width: 100%;
@@ -37,7 +37,6 @@
             flex-direction: column;
             min-height: 600px;
             position: relative;
-            /* The rust colored top border from screenshot */
             border-top: 10px solid var(--brand-rust); 
         }
 
@@ -50,13 +49,20 @@
         }
 
         .app-logo {
-            max-width: 160px; /* Adjusted size to look balanced */
+            max-width: 200px; 
             height: auto;
             display: block;
             margin: 0 auto;
         }
 
-        /* Content Area */
+        .logo-fallback {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--brand-rust);
+            display: none;
+        }
+
+        /* Content */
         .content-area {
             padding: 30px 40px;
             flex-grow: 1;
@@ -65,7 +71,6 @@
             justify-content: center; 
         }
 
-        /* Typography */
         h1 {
             color: var(--text-dark);
             font-weight: 600;
@@ -82,9 +87,9 @@
             margin-bottom: 30px;
         }
 
-        /* Question Text Styling */
+        /* Question Area */
         .question-container {
-            min-height: 100px;
+            min-height: 120px; 
             display: flex;
             align-items: center;
             justify-content: center;
@@ -93,13 +98,13 @@
 
         .question-text {
             font-size: 1.5rem;
-            color: #333; /* Forced dark color */
+            color: #333; 
             font-weight: 600;
             text-align: center;
             line-height: 1.4;
         }
 
-        /* Answer Buttons */
+        /* Buttons */
         .options-grid {
             display: flex;
             flex-direction: column;
@@ -126,7 +131,7 @@
             background-color: #FAFAFA;
         }
 
-        .btn-start {
+        .btn-start, .btn-restart {
             background-color: var(--brand-rust);
             color: white;
             border: none;
@@ -143,7 +148,7 @@
             background-color: #A04A36;
         }
 
-        /* Progress Footer */
+        /* Footer */
         .footer-progress {
             text-align: center;
             color: #999;
@@ -152,7 +157,7 @@
             padding-bottom: 20px;
         }
 
-        /* View Management */
+        /* Views */
         .view-section {
             display: none;
             width: 100%;
@@ -162,7 +167,7 @@
             display: block;
         }
 
-        /* Results Styling */
+        /* Results */
         .result-box {
             background: #F9F9F9;
             border-left: 5px solid var(--brand-rust);
@@ -195,7 +200,8 @@
 
 <div class="app-container">
     <div class="header">
-        <img src="hoh_logo.png" alt="Habits of Health" class="app-logo">
+        <img src="hoh_logo.png" alt="Habits of Health" class="app-logo" onerror="this.style.display='none'; document.querySelector('.logo-fallback').style.display='block';">
+        <div class="logo-fallback">HABITS of HEALTH</div>
     </div>
 
     <div class="content-area">
@@ -235,7 +241,7 @@
             <div style="text-align: center;">
                 <h2 id="result-title" style="color: var(--brand-rust);"></h2>
                 <div id="result-content"></div>
-                <button class="btn-start" style="margin-top: 30px;" onclick="location.reload()">Restart</button>
+                <button class="btn-restart" style="margin-top: 30px;" onclick="location.reload()">Restart</button>
             </div>
         </div>
 
@@ -244,8 +250,8 @@
 
 <script>
     // --- 1. Data Definitions ---
-    [cite_start]// Source: Element-16.pdf [cite: 12-54]
-    var questions = [
+    [cite_start]// Source: Element-16.pdf - Habits of Disease Food Addiction Susceptibility Quiz [cite: 11-54]
+    var quizQuestions = [
         "1. I find it difficult to control how much I eat.",
         "2. I crash in the afternoon and have trouble waking up in the morning.",
         "3. I have cravings for specific foods.",
@@ -258,41 +264,38 @@
         "10. I crave carbohydrates like pasta, bread, white rice, or desserts."
     ];
 
-    var currentIndex = 0;
-    var scores = { "Rarely": 0, "Occasionally": 0, "Daily": 0 };
+    var currentQIndex = 0;
+    var quizScores = { "Rarely": 0, "Occasionally": 0, "Daily": 0 };
 
     // --- 2. Functions ---
 
     function startQuiz() {
-        // Switch to quiz view
         switchView('view-quiz');
-        
-        // Reset Variables
-        currentIndex = 0;
-        scores = { "Rarely": 0, "Occasionally": 0, "Daily": 0 };
-        
-        // Load first question
+        currentQIndex = 0;
+        quizScores = { "Rarely": 0, "Occasionally": 0, "Daily": 0 };
         renderQuestion();
     }
 
     function renderQuestion() {
-        var qTextEl = document.getElementById('question-text');
-        var qCountEl = document.getElementById('q-current');
+        var qText = document.getElementById('question-text');
+        var qNum = document.getElementById('q-current');
         
-        // Directly set text - no fade animation to prevent visibility bugs
-        qTextEl.innerText = questions[currentIndex];
-        qCountEl.innerText = currentIndex + 1;
+        // Safety check
+        if (quizQuestions[currentQIndex]) {
+            qText.textContent = quizQuestions[currentQIndex];
+            qNum.textContent = currentQIndex + 1;
+        }
     }
 
     function handleAnswer(answer) {
-        // 1. Save Score
-        scores[answer]++;
+        // Record score
+        quizScores[answer]++;
         
-        // 2. Increment Index
-        currentIndex++;
+        // Move next
+        currentQIndex++;
 
-        // 3. Check if done
-        if (currentIndex < questions.length) {
+        // Check completion
+        if (currentQIndex < quizQuestions.length) {
             renderQuestion();
         } else {
             finishQuiz();
@@ -301,7 +304,6 @@
 
     function finishQuiz() {
         switchView('view-loading');
-        // Short delay to show loading state
         setTimeout(showResults, 1500);
     }
 
@@ -309,25 +311,26 @@
         switchView('view-results');
 
         [cite_start]// Scoring Logic: >6 in a category determines result [cite: 56-58]
-        var result = "Mixed"; // Default
-        if (scores["Daily"] > 6) {
+        var result = "Mixed"; 
+        if (quizScores["Daily"] > 6) {
             result = "High";
-        } else if (scores["Occasionally"] > 6) {
+        } else if (quizScores["Occasionally"] > 6) {
             result = "Moderate";
-        } else if (scores["Rarely"] > 6) {
+        } else if (quizScores["Rarely"] > 6) {
             result = "Low";
         }
 
         var titleEl = document.getElementById('result-title');
         var contentEl = document.getElementById('result-content');
 
-        titleEl.innerText = result + " Susceptibility";
+        titleEl.textContent = result + " Susceptibility";
 
         // Generate Content based on result
-        var htmlContent = "";
+        var html = "";
 
+        // Content logic derived from source images
         if (result === "High") {
-            htmlContent = `
+            html = `
                 <p>According to the "rat lever" study, you are highly susceptible to cues. The cue itself has likely become the reward.</p>
                 <div class="result-box">
                     <h3>🛡️ Your Action Plan</h3>
@@ -338,7 +341,7 @@
                 </div>
             `;
         } else if (result === "Moderate") {
-            htmlContent = `
+            html = `
                 <p>Like the moderate group in the study, you interact with the "lever" sometimes. In our obesigenic world, you are at risk.</p>
                 <div class="result-box">
                     <h3>🛡️ Your Action Plan</h3>
@@ -349,7 +352,7 @@
                 </div>
             `;
         } else {
-            htmlContent = `
+            html = `
                 <p>You are like the group that only ate when hungry. You likely don't rely on food for emotional reward.</p>
                 <div class="result-box">
                     <h3>🛡️ Your Action Plan</h3>
@@ -361,8 +364,8 @@
             `;
         }
 
-        // Add General Advice (Stop Challenge Choose)
-        htmlContent += `
+        // General Advice
+        html += `
             <div style="margin-top: 20px; text-align: left; font-size: 0.95rem; color: #555;">
                 <p><strong>Next Steps:</strong></p>
                 <p>Use the <em>Stop. Challenge. Choose.™</em> method whenever you feel emotional tension or stress triggers.</p>
@@ -370,10 +373,9 @@
             </div>
         `;
 
-        contentEl.innerHTML = htmlContent;
+        contentEl.innerHTML = html;
     }
 
-    // Helper to hide/show sections
     function switchView(id) {
         var views = document.querySelectorAll('.view-section');
         for (var i = 0; i < views.length; i++) {
