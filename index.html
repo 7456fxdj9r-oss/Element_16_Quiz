@@ -4,7 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Habits of Health Assessment</title>
+    
+    <meta property="og:title" content="Food Addiction Susceptibility Assessment">
+    <meta property="og:description" content="Discover your susceptibility profile and get a personalized action plan based on the Habits of Health system.">
+    <meta property="og:image" content="og-image.jpg">
+    <meta property="og:type" content="website">
+
     <style>
+        /* --- CSS STYLES --- */
         :root {
             --bg-beige: #F0EFEA;       
             --brand-rust: #C05A43;     
@@ -143,11 +150,29 @@
             background-color: #A04A36;
         }
 
+        /* Back Button Style */
+        .btn-back {
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 0.9rem;
+            cursor: pointer;
+            padding: 10px;
+            margin-bottom: 10px;
+            align-self: flex-start;
+            display: flex;
+            align-items: center;
+        }
+        
+        .btn-back:hover {
+            color: var(--brand-rust);
+        }
+
         .footer-progress {
             text-align: center;
             color: #999;
             font-size: 0.95rem;
-            margin-top: 40px;
+            margin-top: 20px;
             padding-bottom: 20px;
         }
 
@@ -204,10 +229,13 @@
         </div>
 
         <div id="view-quiz" class="view-section">
+            <button id="btn-back" class="btn-back" onclick="goBack()">
+                &#8592; Back
+            </button>
+
             <div class="question-container">
                 <div id="question-text" class="question-text">
-                    Question goes here
-                </div>
+                    </div>
             </div>
 
             <div class="options-grid">
@@ -241,6 +269,7 @@
 </div>
 
 <script>
+    // --- DATA ---
     var quizQuestions = [
         "1. I find it difficult to control how much I eat.",
         "2. I crash in the afternoon and have trouble waking up in the morning.",
@@ -255,11 +284,16 @@
     ];
 
     var currentQIndex = 0;
+    // We maintain a history array to know which answer to remove if user clicks 'Back'
+    var userHistory = []; 
     var quizScores = { "Rarely": 0, "Occasionally": 0, "Daily": 0 };
+
+    // --- FUNCTIONS ---
 
     function startQuiz() {
         switchView('view-quiz');
         currentQIndex = 0;
+        userHistory = [];
         quizScores = { "Rarely": 0, "Occasionally": 0, "Daily": 0 };
         renderQuestion();
     }
@@ -267,20 +301,29 @@
     function renderQuestion() {
         var qText = document.getElementById('question-text');
         var qNum = document.getElementById('q-current');
+        var backBtn = document.getElementById('btn-back');
         
-        if (quizQuestions[currentQIndex]) {
-            qText.textContent = quizQuestions[currentQIndex];
-            qNum.textContent = currentQIndex + 1;
+        // Hide Back button on the first question
+        if (currentQIndex === 0) {
+            backBtn.style.visibility = 'hidden';
+        } else {
+            backBtn.style.visibility = 'visible';
         }
+
+        qText.innerText = quizQuestions[currentQIndex];
+        qNum.innerText = currentQIndex + 1;
     }
 
     function handleAnswer(answer) {
-        if (quizScores[answer] !== undefined) {
-            quizScores[answer]++;
-        }
+        // Record score
+        quizScores[answer]++;
+        // Save to history so we can undo it later
+        userHistory.push(answer);
         
+        // Next index
         currentQIndex++;
 
+        // Check completion
         if (currentQIndex < quizQuestions.length) {
             renderQuestion();
         } else {
@@ -288,14 +331,30 @@
         }
     }
 
+    function goBack() {
+        if (currentQIndex > 0) {
+            // Remove the last answer from history
+            var lastAnswer = userHistory.pop();
+            // Remove the score
+            if (lastAnswer) {
+                quizScores[lastAnswer]--;
+            }
+            // Go back one step
+            currentQIndex--;
+            renderQuestion();
+        }
+    }
+
     function finishQuiz() {
         switchView('view-loading');
+        // Wait 1.5 seconds then show results
         setTimeout(showResults, 1500);
     }
 
     function showResults() {
         switchView('view-results');
 
+        // Scoring Logic: >6 in a category determines result
         var result = "Mixed"; 
         if (quizScores["Daily"] > 6) {
             result = "High";
@@ -308,10 +367,10 @@
         var titleEl = document.getElementById('result-title');
         var contentEl = document.getElementById('result-content');
 
-        titleEl.textContent = result + " Susceptibility";
+        titleEl.innerText = result + " Susceptibility";
 
-        // Initialize HTML with Dr. A's photo
-        var html = '<img src="dra.png" alt="Dr. A" style="max-width: 150px; height: auto; border-radius: 50%; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto;">';
+        // Generate HTML with Dr. A photo
+        var html = '<img src="dra.png" alt="Dr. A" style="max-width: 150px; height: auto; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto;">';
 
         if (result === "High") {
             html += '<p>According to the "rat lever" study, you are highly susceptible to cues. The cue itself has likely become the reward.</p>' +
