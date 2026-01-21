@@ -3,267 +3,272 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Food Susceptibility Assessment</title>
+    <title>Habits of Health Assessment</title>
     <style>
         :root {
-            --primary: #4A90E2;
-            --secondary: #50E3C2;
-            --bg: #F5F7FA;
+            /* Branding Colors extracted from the Logo */
+            --brand-navy: #1F3A4D;   /* Bottom stone/Text */
+            --brand-red: #8F3B3B;    /* Middle stone */
+            --brand-clay: #A65E2E;   /* Orange stone */
+            --brand-olive: #6E7C4D;  /* Green stone */
+            --brand-sky: #8FB8D6;    /* Top stone */
+            
+            --bg-color: #F4F7F9;
             --card-bg: #FFFFFF;
-            --text: #333333;
-            --text-light: #7F8C8D;
+            --text-main: #2C3E50;
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg);
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
             margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            color: var(--text);
-            overflow-x: hidden;
+            color: var(--text-main);
         }
 
-        /* --- Main Container --- */
         .app-container {
             background: var(--card-bg);
             width: 100%;
-            max-width: 600px;
+            max-width: 650px;
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px rgba(31, 58, 77, 0.15);
             overflow: hidden;
-            position: relative;
-            min-height: 500px;
             display: flex;
             flex-direction: column;
+            min-height: 600px;
+            position: relative;
         }
 
-        /* --- Header & Progress --- */
-        .header {
-            padding: 20px 30px;
+        /* --- Branding Header --- */
+        .logo-header {
             background: #fff;
+            padding: 25px 0 10px 0;
+            text-align: center;
             border-bottom: 1px solid #eee;
-            z-index: 10;
         }
 
-        .progress-track {
-            background: #eee;
-            height: 8px;
-            border-radius: 4px;
-            overflow: hidden;
-            margin-top: 10px;
+        .app-logo {
+            max-width: 180px;
+            height: auto;
         }
 
-        .progress-fill {
+        /* --- Progress Bar --- */
+        .progress-container {
+            background: #eef2f5;
+            height: 6px;
+            width: 100%;
+        }
+
+        .progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            /* Gradient using the logo's Navy and Sky Blue */
+            background: linear-gradient(90deg, var(--brand-navy), var(--brand-sky));
             width: 0%;
-            transition: width 0.5s ease;
+            transition: width 0.4s ease;
         }
 
-        .step-indicator {
-            font-size: 0.85rem;
-            color: var(--text-light);
-            text-align: right;
-            margin-top: 5px;
-        }
-
-        /* --- Content Areas --- */
+        /* --- Content Views --- */
         .view-section {
-            padding: 30px;
+            padding: 30px 40px;
             flex-grow: 1;
-            display: none; /* Hidden by default */
+            display: none;
             flex-direction: column;
-            justify-content: center;
-            animation: fadeIn 0.5s ease forwards;
+            animation: fadeIn 0.6s ease forwards;
         }
 
         .view-section.active {
             display: flex;
         }
 
-        /* --- Start Screen --- */
-        .hero-title {
-            font-size: 2rem;
-            color: var(--primary);
-            margin-bottom: 15px;
-        }
+        /* --- Typography & Buttons --- */
+        h1, h2 { color: var(--brand-navy); margin-top: 0; }
+        
+        p { line-height: 1.6; color: #555; font-size: 1.05rem; }
 
-        .btn-main {
-            background: var(--primary);
+        .btn-primary {
+            background-color: var(--brand-navy);
             color: white;
             border: none;
-            padding: 15px 30px;
+            padding: 16px 32px;
             font-size: 1.1rem;
             border-radius: 50px;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.2s;
             margin-top: 20px;
             align-self: flex-start;
-        }
-
-        .btn-main:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.4);
-        }
-
-        /* --- Question Screen --- */
-        .question-text {
-            font-size: 1.4rem;
             font-weight: 600;
-            margin-bottom: 30px;
-            line-height: 1.4;
+            box-shadow: 0 4px 15px rgba(31, 58, 77, 0.3);
         }
 
-        .options-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+        .btn-primary:hover {
+            background-color: var(--brand-sky);
+            transform: translateY(-2px);
+        }
+
+        /* --- Question Cards --- */
+        .question-text {
+            font-size: 1.5rem;
+            color: var(--brand-navy);
+            font-weight: 700;
+            margin-bottom: 30px;
+            min-height: 80px; /* Prevent jumpiness */
         }
 
         .option-card {
+            background: #fff;
+            border: 2px solid #eef2f5;
             padding: 20px;
-            border: 2px solid #eee;
+            margin-bottom: 15px;
             border-radius: 12px;
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
             align-items: center;
+            font-weight: 500;
             font-size: 1.1rem;
+            color: var(--brand-navy);
         }
 
         .option-card:hover {
-            border-color: var(--primary);
-            background: #F0F7FF;
+            border-color: var(--brand-sky);
+            background-color: #fafdff;
         }
 
-        .option-card.selected {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
+        .option-card:active {
+            transform: scale(0.98);
         }
 
-        /* --- Loading Screen --- */
-        .loader-content {
-            text-align: center;
+        /* --- Loading Spinner --- */
+        .spinner-container {
+            display: flex;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
+            height: 100%;
+            margin-top: 50px;
         }
         
         .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid var(--primary);
+            width: 60px;
+            height: 60px;
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid var(--brand-navy);
+            border-right: 6px solid var(--brand-red); /* Adding brand accent */
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 0 auto 20px auto;
-        }
-
-        /* --- Results Screen --- */
-        .result-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .score-badge {
-            display: inline-block;
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-        }
-
-        .badge-high { background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
-        .badge-mod { background: #fff8e1; color: #f57f17; border: 1px solid #ffecb3; }
-        .badge-low { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
-
-        .context-box {
-            background: #f9f9f9;
-            padding: 20px;
-            border-radius: 10px;
             margin-bottom: 20px;
-            border-left: 4px solid var(--primary);
         }
 
-        .context-box h4 { margin-top: 0; }
-        .context-box ul { padding-left: 20px; }
-        .context-box li { margin-bottom: 8px; }
+        /* --- Results Styling --- */
+        .result-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 30px;
+            color: white;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
-        /* --- Fanfare Confetti --- */
+        .bg-high { background-color: var(--brand-red); }
+        .bg-mod { background-color: var(--brand-clay); }
+        .bg-low { background-color: var(--brand-olive); }
+
+        .context-card {
+            background: #F8F9FA;
+            border-left: 5px solid var(--brand-navy);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .context-card h3 { font-size: 1.2rem; margin-bottom: 10px; }
+        .context-card ul { padding-left: 20px; margin: 0; }
+        .context-card li { margin-bottom: 8px; }
+
+        /* --- Confetti --- */
         .confetti {
             position: absolute;
             width: 10px;
             height: 10px;
-            background-color: #f00;
-            animation: fall linear forwards;
             top: -20px;
-            z-index: 5;
+            z-index: 10;
+            animation: fall linear forwards;
         }
 
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fall { to { transform: translateY(600px) rotate(720deg); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fall { to { transform: translateY(700px) rotate(720deg); } }
 
+        /* Mobile tweaks */
+        @media (max-width: 600px) {
+            .view-section { padding: 20px; }
+            .question-text { font-size: 1.3rem; }
+        }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    <div class="header">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <strong style="color:var(--primary);">Habits of Health</strong>
-            <span id="step-indicator" class="step-indicator">Introduction</span>
-        </div>
-        <div class="progress-track">
-            <div id="progress-fill" class="progress-fill"></div>
-        </div>
+    <div class="logo-header">
+        <img src="image_e67e8a.png" alt="Habits of Health Logo" class="app-logo">
     </div>
 
-    <div id="view-start" class="view-section active">
-        <h1 class="hero-title">Food Addiction Susceptibility</h1>
-        <p>Just like the rats in the scientific study, humans classify into three general groups regarding sugar and refined flour.</p>
-        <p>This interactive assessment will help you determine your risk level so you can adopt the right "Habits of Disease" prevention strategy.</p>
-        <button class="btn-main" onclick="startQuiz()">Start Assessment</button>
+    <div class="progress-container">
+        <div id="progress-bar" class="progress-bar"></div>
+    </div>
+
+    <div id="view-intro" class="view-section active">
+        <h1>Food Addiction Susceptibility</h1>
+        <p>This assessment is based on the <em>Habits of Health</em> system. It will help you identify which category you fall into regarding your relationship with sugar and refined flour.</p>
+        <p>Just like the "rat lever" study discussed in <em>Dr. A's Habits of Health</em>, understanding your genetic predisposition is the first step to taking back control.</p>
+        <button class="btn-primary" onclick="startQuiz()">Begin Assessment</button>
     </div>
 
     <div id="view-quiz" class="view-section">
-        <div id="question-container">
-            <div id="question-text" class="question-text">Loading...</div>
-            <div class="options-grid">
-                <div class="option-card" onclick="selectAnswer('Rarely')">Rarely</div>
-                <div class="option-card" onclick="selectAnswer('Occasionally')">Occasionally</div>
-                <div class="option-card" onclick="selectAnswer('Daily')">Daily</div>
+        <div style="flex-grow:1; display:flex; flex-direction:column; justify-content:center;">
+            <div id="question-text" class="question-text"></div>
+            
+            <div id="options-container">
+                <div class="option-card" onclick="handleAnswer('Rarely')">Rarely</div>
+                <div class="option-card" onclick="handleAnswer('Occasionally')">Occasionally</div>
+                <div class="option-card" onclick="handleAnswer('Daily')">Daily</div>
             </div>
+        </div>
+        <div style="text-align:center; color:#999; font-size:0.9rem; margin-top:20px;">
+            Question <span id="q-current">1</span> of <span id="q-total">10</span>
         </div>
     </div>
 
     <div id="view-loading" class="view-section">
-        <div class="loader-content">
+        <div class="spinner-container">
             <div class="spinner"></div>
-            <h2>Calculating Profile...</h2>
-            <p>Analyzing susceptibility patterns...</p>
+            <h2 style="color:var(--brand-navy);">Analyzing Profile...</h2>
+            <p>Comparing against Habits of Disease patterns...</p>
         </div>
     </div>
 
-    <div id="view-results" class="view-section">
-        <div id="fanfare-container"></div>
-        <div class="result-header">
-            <div id="score-badge" class="score-badge">High Susceptibility</div>
-            <h2 id="result-title">You are highly susceptible.</h2>
+    <div id="view-result" class="view-section">
+        <div id="confetti-wrapper"></div>
+        <div style="text-align:center;">
+            <span id="result-badge" class="result-badge"></span>
+            <h2 id="result-title" style="font-size:1.8rem;"></h2>
         </div>
-        
-        <div id="result-content">
-            </div>
 
-        <button class="btn-main" style="width:100%; text-align:center;" onclick="location.reload()">Retake Assessment</button>
+        <div id="result-content"></div>
+
+        <button class="btn-primary" style="width:100%; text-align:center;" onclick="location.reload()">Restart Assessment</button>
     </div>
 </div>
 
 <script>
-    //  Questions extracted directly from the source text
+    // --- Data ---
+    [cite_start]// Source: Habits of Disease Food Addiction Susceptibility Quiz [cite: 8, 9]
     const questions = [
         "I find it difficult to control how much I eat.",
         "I crash in the afternoon and have trouble waking up in the morning.",
@@ -277,176 +282,163 @@
         "I crave carbohydrates like pasta, bread, white rice, or desserts."
     ];
 
-    let currentQuestionIndex = 0;
-    let answers = { "Rarely": 0, "Occasionally": 0, "Daily": 0 };
+    let currentQ = 0;
+    let scores = { "Rarely": 0, "Occasionally": 0, "Daily": 0 };
 
-    // --- Navigation Functions ---
+    // --- Logic ---
 
     function startQuiz() {
         switchView('view-quiz');
-        updateProgress();
-        loadQuestion();
+        renderQuestion();
+        document.getElementById('q-total').innerText = questions.length;
     }
 
-    function switchView(viewId) {
-        document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-        document.getElementById(viewId).classList.add('active');
-    }
-
-    function updateProgress() {
-        const percent = ((currentQuestionIndex) / questions.length) * 100;
-        document.getElementById('progress-fill').style.width = `${percent}%`;
-        
-        if(currentQuestionIndex < questions.length) {
-            document.getElementById('step-indicator').innerText = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
-        } else {
-            document.getElementById('step-indicator').innerText = `Complete`;
-        }
-    }
-
-    // --- Quiz Logic ---
-
-    function loadQuestion() {
+    function renderQuestion() {
+        // Fade effect
         const qText = document.getElementById('question-text');
-        
-        // specific fade out/in effect for text
         qText.style.opacity = 0;
+        
         setTimeout(() => {
-            qText.innerText = questions[currentQuestionIndex];
+            qText.innerText = questions[currentQ];
             qText.style.opacity = 1;
+            document.getElementById('q-current').innerText = currentQ + 1;
+            
+            // Update progress bar
+            const pct = ((currentQ) / questions.length) * 100;
+            document.getElementById('progress-bar').style.width = pct + "%";
         }, 200);
     }
 
-    function selectAnswer(value) {
-        answers[value]++;
-        currentQuestionIndex++;
-        updateProgress();
+    function handleAnswer(answer) {
+        scores[answer]++;
+        currentQ++;
 
-        if (currentQuestionIndex < questions.length) {
-            // Slight delay for UX flow
-            setTimeout(loadQuestion, 250);
+        if (currentQ < questions.length) {
+            renderQuestion();
         } else {
-            setTimeout(finishQuiz, 250);
+            document.getElementById('progress-bar').style.width = "100%";
+            finishQuiz();
         }
     }
 
     function finishQuiz() {
         switchView('view-loading');
-        document.getElementById('progress-fill').style.width = '100%';
-        
-        // Simulate calculation delay
-        setTimeout(() => {
-            calculateAndShowResults();
-        }, 2000);
+        // Artificial delay for suspense
+        setTimeout(calculateResults, 2000);
     }
 
-    // --- Results & Fanfare ---
+    function calculateResults() {
+        switchView('view-result');
 
-    function calculateAndShowResults() {
-        switchView('view-results');
-        
-        // [cite: 1] Scoring logic: >6 in a category determines result
-        let resultType = "Mixed";
-        if (answers["Daily"] > 6) resultType = "High";
-        else if (answers["Occasionally"] > 6) resultType = "Moderate";
-        else if (answers["Rarely"] > 6) resultType = "Low";
+        [cite_start]// Scoring Logic based on [cite: 9]
+        // >6 in a category determines the result
+        let result = "Mixed";
+        if (scores["Daily"] > 6) result = "High";
+        else if (scores["Occasionally"] > 6) result = "Moderate";
+        else if (scores["Rarely"] > 6) result = "Low";
 
-        renderResultContent(resultType);
-        
-        if(resultType === "Low" || resultType === "Moderate") {
-            triggerConfetti(); // Celebrate good scores
-        }
+        renderResultUI(result);
     }
 
-    function renderResultContent(type) {
-        const badge = document.getElementById('score-badge');
+    function renderResultUI(level) {
         const title = document.getElementById('result-title');
+        const badge = document.getElementById('result-badge');
         const content = document.getElementById('result-content');
 
-        let html = "";
+        // Reset badge classes
+        badge.className = 'result-badge';
 
-        // [cite: 3, 4] Content derived from source images about the Rat Study and Action Plans
-        if (type === "High") {
-            badge.className = "score-badge badge-high";
+        if (level === "High") {
+            badge.classList.add('bg-high');
             badge.innerText = "High Susceptibility";
-            title.innerText = "You may be highly susceptible.";
-            html = `
-                <div class="context-box">
-                    <h4>🔬 The Science: The "Rat Lever" Effect</h4>
-                    <p>In studies, highly susceptible rats "loved the lever" and would hit it even before food was released. This indicates that for you, the <strong>cue itself has become the reward</strong>.</p>
+            title.innerText = "You have High Susceptibility";
+            [cite_start]// Content Source: [cite: 4, 5] (Rat study) and uploaded image text
+            content.innerHTML = `
+                <div class="context-card">
+                    <h3>🔬 The Science: The "Rat Lever" Effect</h3>
+                    <p>In studies, highly susceptible rats "loved the lever" and would hit it even before food was released. [cite_start]The cue itself became the reward. [cite: 4, 5]</p>
                 </div>
-                <div class="context-box">
-                    <h4>🛡️ Your Action Plan</h4>
+                <div class="context-card">
+                    <h3>🛡️ Your Action Plan</h3>
                     <ul>
-                        <li><strong>Genetic Factor:</strong> Understand that this is likely genetically predetermined. It's not a lack of willpower.</li>
-                        <li><strong>Avoidance:</strong> You must strictly avoid sugary and starchy processed foods.</li>
-                        <li><strong>Green-Coded Foods:</strong> Stick to low-glycemic, whole foods. Avoid processed fruits like juices.</li>
-                        <li><strong>Goal:</strong> You need to calm the dopamine receptors to prevent relapsing into cravings.</li>
+                        <li><strong>Complete Avoidance:</strong> Since this is likely genetically predetermined, you must avoid sugary and starchy processed foods entirely to prevent relapse.</li>
+                        <li><strong>Rewire Your Brain:</strong> Stick to the green-coded chart. Avoiding sweet tastes helps calm dopamine receptors.</li>
                     </ul>
                 </div>
             `;
-        } else if (type === "Moderate") {
-            badge.className = "score-badge badge-mod";
+        } else if (level === "Moderate") {
+            badge.classList.add('bg-mod');
             badge.innerText = "Moderate Susceptibility";
-            title.innerText = "You have moderate susceptibility.";
-            html = `
-                 <div class="context-box">
-                    <h4>🔬 The Science</h4>
-                    <p>Like the moderate group in the study, you might approach the "lever" sometimes, but not always. However, we live in an obesigenic world saturated with cues.</p>
+            title.innerText = "You have Moderate Susceptibility";
+            content.innerHTML = `
+                <div class="context-card">
+                    <h3>🔬 The Science</h3>
+                    <p>Like the moderate group in the study, you might approach the "lever" sometimes. However, in our obesigenic world, cues are everywhere.</p>
                 </div>
-                <div class="context-box">
-                    <h4>🛡️ Your Action Plan</h4>
+                <div class="context-card">
+                    <h3>🛡️ Your Action Plan</h3>
                     <ul>
-                        <li><strong>Be Vigilant:</strong> You don't need total abstinence like the High group, but you must be very cautious with processed foods containing hidden sugars.</li>
-                        <li><strong>Label Reading:</strong> Review everything for hidden sugar and flour.</li>
+                        <li><strong>Be Vigilant:</strong> You may not need total abstinence, but be very cautious with hidden sugars.</li>
+                        <li><strong>Check Labels:</strong> Look for hidden sugar and flour in processed foods.</li>
                     </ul>
                 </div>
             `;
+            triggerConfetti();
         } else {
-            badge.className = "score-badge badge-low";
-            badge.innerText = "Low Susceptibility";
-            title.innerText = "You have low susceptibility.";
-            html = `
-                <div class="context-box">
-                    <h4>🔬 The Science</h4>
-                    <p>You are like the rats that only approached when food was actually present. You likely eat to satisfy hunger, not cravings.</p>
+            // Low or Mixed
+            badge.classList.add('bg-low');
+            badge.innerText = "Low / Mixed Susceptibility";
+            title.innerText = "You have Low Susceptibility";
+            content.innerHTML = `
+                <div class="context-card">
+                    <h3>🔬 The Science</h3>
+                    <p>You are like the group that only ate when hungry. You likely don't rely on food for emotional reward.</p>
                 </div>
-                <div class="context-box">
-                    <h4>🛡️ Your Action Plan</h4>
+                <div class="context-card">
+                    <h3>🛡️ Your Action Plan</h3>
                     <ul>
-                        <li><strong>Maintain:</strong> Continue choosing whole foods.</li>
-                        <li><strong>Caution:</strong> Even with low susceptibility, highly processed foods can still disrupt your metabolic switches (Insulin and Leptin).</li>
+                        <li><strong>Maintain:</strong> Continue choosing whole, low-GI foods.</li>
+                        <li><strong>Caution:</strong> Even with low risk, processed foods can disrupt your hunger hormones (Leptin/Insulin).</li>
                     </ul>
                 </div>
             `;
+            triggerConfetti();
         }
 
-        //  General advice for all users
-        html += `
-            <div style="margin-top:20px; border-top:1px solid #eee; padding-top:20px;">
-                <h4>🧠 Habits of Health Tools</h4>
-                <p>Use <strong>Stop. Challenge. Choose.™</strong> if you feel emotional tension or stress triggers.</p>
-                <p>Rely on the <strong>Portion Control Plate</strong> system to keep calories in check without counting.</p>
-            </div>
+        // General Advice for all (from uploaded image text)
+        content.innerHTML += `
+            <p style="margin-top:20px; font-style:italic; font-size:0.95rem;">
+                <strong>Next Step:</strong> Use the <em>Stop. Challenge. Choose.™</em> method if you feel emotional tension or stress triggers.
+            </p>
         `;
+    }
 
-        content.innerHTML = html;
+    // --- Helpers ---
+
+    function switchView(id) {
+        document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
     }
 
     function triggerConfetti() {
-        const colors = ['#4A90E2', '#50E3C2', '#F5A623', '#E74C3C'];
-        const container = document.getElementById('fanfare-container');
+        const colors = [
+            getComputedStyle(document.documentElement).getPropertyValue('--brand-red'),
+            getComputedStyle(document.documentElement).getPropertyValue('--brand-sky'),
+            getComputedStyle(document.documentElement).getPropertyValue('--brand-olive'),
+            getComputedStyle(document.documentElement).getPropertyValue('--brand-clay')
+        ];
         
-        for (let i = 0; i < 50; i++) {
-            const conf = document.createElement('div');
-            conf.className = 'confetti';
-            conf.style.left = Math.random() * 100 + '%';
-            conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-            conf.style.animationDuration = (Math.random() * 3 + 2) + 's';
-            conf.style.animationDelay = (Math.random() * 2) + 's';
-            container.appendChild(conf);
+        const wrapper = document.getElementById('confetti-wrapper');
+        for (let i = 0; i < 40; i++) {
+            const c = document.createElement('div');
+            c.className = 'confetti';
+            c.style.left = Math.random() * 100 + '%';
+            c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            c.style.animationDuration = (Math.random() * 2 + 3) + 's';
+            wrapper.appendChild(c);
         }
     }
+
 </script>
 
 </body>
