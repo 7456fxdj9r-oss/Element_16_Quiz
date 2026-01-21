@@ -5,35 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Habits of Health Assessment</title>
     
-    <meta property="og:title" content="Food Addiction Susceptibility Assessment">
-    <meta property="og:description" content="Discover your susceptibility profile based on the Habits of Health system.">
-    <meta property="og:image" content="og-image.jpg">
-    <meta property="og:type" content="website">
-
     <style>
         /* --- CSS STYLES --- */
-        :root {
-            --bg-beige: #F0EFEA;       
-            --brand-rust: #C05A43;     
-            --brand-green: #7FAB56;    
-            --text-dark: #333333;      
-            --card-white: #FFFFFF;
-            --btn-border: #D1D1D1;
-        }
-
         body {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            background-color: var(--bg-beige);
+            background-color: #F0EFEA;
             margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            color: var(--text-dark);
+            color: #333;
         }
 
         .app-container {
-            background: var(--card-white);
+            background: #FFFFFF;
             width: 100%;
             max-width: 600px;
             border-radius: 12px;
@@ -43,7 +29,7 @@
             flex-direction: column;
             min-height: 600px;
             position: relative;
-            border-top: 10px solid var(--brand-rust); 
+            border-top: 10px solid #C05A43; /* Rust Color */
         }
 
         .header {
@@ -63,7 +49,7 @@
         .logo-fallback {
             font-size: 1.5rem;
             font-weight: bold;
-            color: var(--brand-rust);
+            color: #C05A43;
             display: none;
         }
 
@@ -76,7 +62,7 @@
         }
 
         h1 {
-            color: var(--text-dark);
+            color: #333;
             font-weight: 600;
             margin-bottom: 20px;
             font-size: 1.8rem;
@@ -91,7 +77,6 @@
             margin-bottom: 30px;
         }
 
-        /* Question Container */
         .question-container {
             min-height: 120px; 
             display: flex;
@@ -106,10 +91,8 @@
             font-weight: 600;
             text-align: center;
             line-height: 1.4;
-            display: block; /* Forced block display */
         }
 
-        /* Options Grid */
         .options-grid {
             display: flex;
             flex-direction: column;
@@ -118,7 +101,7 @@
 
         .btn-option {
             background: #fff;
-            border: 1px solid var(--btn-border);
+            border: 1px solid #D1D1D1;
             border-radius: 6px;
             padding: 20px;
             font-size: 1.1rem;
@@ -131,13 +114,13 @@
         }
 
         .btn-option:hover {
-            border-color: var(--brand-rust);
-            color: var(--brand-rust);
+            border-color: #C05A43;
+            color: #C05A43;
             background-color: #FAFAFA;
         }
 
         .btn-start, .btn-restart {
-            background-color: var(--brand-rust);
+            background-color: #C05A43;
             color: white;
             border: none;
             padding: 15px 40px;
@@ -168,7 +151,7 @@
         }
         
         .btn-back:hover {
-            color: var(--brand-rust);
+            color: #C05A43;
         }
 
         .footer-progress {
@@ -179,7 +162,6 @@
             padding-bottom: 20px;
         }
 
-        /* Views */
         .view-section {
             display: none;
             width: 100%;
@@ -191,7 +173,7 @@
 
         .result-box {
             background: #F9F9F9;
-            border-left: 5px solid var(--brand-rust);
+            border-left: 5px solid #C05A43;
             padding: 20px;
             margin-top: 20px;
             border-radius: 4px;
@@ -199,13 +181,13 @@
             text-align: left;
         }
         
-        .result-box h3 { margin-top: 0; color: var(--brand-rust); font-size: 1.2rem; }
+        .result-box h3 { margin-top: 0; color: #C05A43; font-size: 1.2rem; }
         .result-box ul { padding-left: 20px; color: #555; }
         .result-box li { margin-bottom: 8px; }
 
         .spinner {
             border: 5px solid #f3f3f3;
-            border-top: 5px solid var(--brand-rust);
+            border-top: 5px solid #C05A43;
             border-radius: 50%;
             width: 50px;
             height: 50px;
@@ -229,22 +211,20 @@
         <div id="view-intro" class="view-section active">
             <h1>Food Addiction Susceptibility</h1>
             <p>This assessment helps you understand your relationship with sugar and refined flour. Based on the <em>Habits of Health</em> system, identifying your predisposition is the first step to rewiring your brain.</p>
-            <button class="btn-start" onclick="QuizApp.start()">Begin Assessment</button>
+            <button class="btn-start" onclick="startQuiz()">Begin Assessment</button>
         </div>
 
         <div id="view-quiz" class="view-section">
-            <button id="btn-back" class="btn-back" onclick="QuizApp.goBack()">&#8592; Back</button>
+            <button id="btn-back" class="btn-back" onclick="goBack()">&#8592; Back</button>
 
             <div class="question-container">
-                <div id="question-text" class="question-text">
-                    Loading Question...
-                </div>
+                <div id="question-text" class="question-text">Loading...</div>
             </div>
 
             <div class="options-grid">
-                <button class="btn-option" onclick="QuizApp.handleAnswer('Rarely')">Rarely</button>
-                <button class="btn-option" onclick="QuizApp.handleAnswer('Occasionally')">Occasionally</button>
-                <button class="btn-option" onclick="QuizApp.handleAnswer('Daily')">Daily</button>
+                <button class="btn-option" onclick="handleAnswer('Rarely')">Rarely</button>
+                <button class="btn-option" onclick="handleAnswer('Occasionally')">Occasionally</button>
+                <button class="btn-option" onclick="handleAnswer('Daily')">Daily</button>
             </div>
             
             <div class="footer-progress">
@@ -262,7 +242,7 @@
 
         <div id="view-results" class="view-section">
             <div style="text-align: center;">
-                <h2 id="result-title" style="color: var(--brand-rust);"></h2>
+                <h2 id="result-title" style="color: #C05A43;"></h2>
                 <div id="result-content"></div>
                 <button class="btn-restart" style="margin-top: 30px;" onclick="location.reload()">Restart</button>
             </div>
@@ -272,144 +252,147 @@
 </div>
 
 <script>
-    // Namespace to prevent conflicts
-    const QuizApp = (function() {
+    // --- VARIABLES ---
+    var quizQuestions = [
+        "1. I find it difficult to control how much I eat.",
+        "2. I crash in the afternoon and have trouble waking up in the morning.",
+        "3. I have cravings for specific foods.",
+        "4. I suffer from moodiness, headaches, or fogginess.",
+        "5. When I only eat a moderate amount of food I am not satisfied.",
+        "6. I feel guilty after eating.",
+        "7. I spend a considerable amount of time thinking about food.",
+        "8. I eat even if I am not hungry because I crave a food.",
+        "9. I eat large amounts of food and feel powerless to stop.",
+        "10. I crave carbohydrates like pasta, bread, white rice, or desserts."
+    ];
+
+    var currentQIndex = 0;
+    var userHistory = []; 
+    var quizScores = { "Rarely": 0, "Occasionally": 0, "Daily": 0 };
+
+    // --- FUNCTIONS ---
+
+    function switchView(viewId) {
+        var sections = document.querySelectorAll('.view-section');
+        for (var i = 0; i < sections.length; i++) {
+            sections[i].classList.remove('active');
+        }
+        document.getElementById(viewId).classList.add('active');
+    }
+
+    function startQuiz() {
+        currentQIndex = 0;
+        userHistory = [];
+        quizScores = { "Rarely": 0, "Occasionally": 0, "Daily": 0 };
+        switchView('view-quiz');
+        renderQuestion();
+    }
+
+    function renderQuestion() {
+        var txtEl = document.getElementById('question-text');
+        var numEl = document.getElementById('q-current');
+        var backBtn = document.getElementById('btn-back');
+
+        if (quizQuestions[currentQIndex]) {
+            txtEl.innerText = quizQuestions[currentQIndex];
+            numEl.innerText = currentQIndex + 1;
+        }
+
+        // Hide back button on first question
+        if (currentQIndex === 0) {
+            backBtn.style.visibility = 'hidden';
+        } else {
+            backBtn.style.visibility = 'visible';
+        }
+    }
+
+    function handleAnswer(answer) {
+        // Update Score
+        quizScores[answer]++;
+        // Save history
+        userHistory.push(answer);
         
-        // Data derived from Element 16 source
-        const questions = [
-            "1. I find it difficult to control how much I eat.",
-            "2. I crash in the afternoon and have trouble waking up in the morning.",
-            "3. I have cravings for specific foods.",
-            "4. I suffer from moodiness, headaches, or fogginess.",
-            "5. When I only eat a moderate amount of food I am not satisfied.",
-            "6. I feel guilty after eating.",
-            "7. I spend a considerable amount of time thinking about food.",
-            "8. I eat even if I am not hungry because I crave a food.",
-            "9. I eat large amounts of food and feel powerless to stop.",
-            "10. I crave carbohydrates like pasta, bread, white rice, or desserts."
-        ];
+        // Advance
+        currentQIndex++;
 
-        let currentIndex = 0;
-        let history = []; 
-        let scores = { "Rarely": 0, "Occasionally": 0, "Daily": 0 };
+        if (currentQIndex < quizQuestions.length) {
+            renderQuestion();
+        } else {
+            finishQuiz();
+        }
+    }
 
-        function switchView(viewId) {
-            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-            document.getElementById(viewId).classList.add('active');
+    function goBack() {
+        if (currentQIndex > 0) {
+            var lastAns = userHistory.pop();
+            if (lastAns) {
+                quizScores[lastAns]--;
+            }
+            currentQIndex--;
+            renderQuestion();
+        }
+    }
+
+    function finishQuiz() {
+        switchView('view-loading');
+        setTimeout(showResults, 1500);
+    }
+
+    function showResults() {
+        switchView('view-results');
+
+        // Scoring Logic based on >6 Rule
+        var result = "Mixed";
+        if (quizScores["Daily"] > 6) {
+            result = "High";
+        } else if (quizScores["Occasionally"] > 6) {
+            result = "Moderate";
+        } else if (quizScores["Rarely"] > 6) {
+            result = "Low";
         }
 
-        function renderQuestion() {
-            const txtEl = document.getElementById('question-text');
-            const numEl = document.getElementById('q-current');
-            const backBtn = document.getElementById('btn-back');
+        var titleEl = document.getElementById('result-title');
+        var contentEl = document.getElementById('result-content');
 
-            if (questions[currentIndex]) {
-                txtEl.innerText = questions[currentIndex];
-                numEl.innerText = currentIndex + 1;
-            }
+        titleEl.innerText = result + " Susceptibility";
 
-            // Hide back button on first question
-            if (currentIndex === 0) {
-                backBtn.style.visibility = 'hidden';
-            } else {
-                backBtn.style.visibility = 'visible';
-            }
+        // Build HTML string
+        // Note: Using 'dra_transparent.png' here
+        var html = '<img src="dra_transparent.png" alt="Dr. A" style="max-width: 150px; height: auto; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto;">';
+
+        if (result === "High") {
+            html += '<p>According to the "rat lever" study, you are highly susceptible to cues. The cue itself has likely become the reward.</p>' +
+                   '<div class="result-box">' +
+                   '<h3>🛡️ Your Action Plan</h3>' +
+                   '<ul>' +
+                   '<li><strong>Strict Avoidance:</strong> This is likely genetically predetermined. You must avoid sugary and starchy processed foods entirely to prevent relapse.</li>' +
+                   '<li><strong>Rewire:</strong> Stick to the green-coded chart. Avoiding sweet tastes helps calm dopamine receptors.</li>' +
+                   '</ul></div>';
+        } else if (result === "Moderate") {
+            html += '<p>Like the moderate group in the study, you interact with the "lever" sometimes. In our obesigenic world, you are at risk.</p>' +
+                   '<div class="result-box">' +
+                   '<h3>🛡️ Your Action Plan</h3>' +
+                   '<ul>' +
+                   '<li><strong>Be Vigilant:</strong> You may not need total abstinence, but be very cautious with processed foods containing hidden sugars.</li>' +
+                   '<li><strong>Read Labels:</strong> Look for hidden sugar and flour.</li>' +
+                   '</ul></div>';
+        } else {
+            html += '<p>You are like the group that only ate when hungry. You likely don\'t rely on food for emotional reward.</p>' +
+                   '<div class="result-box">' +
+                   '<h3>🛡️ Your Action Plan</h3>' +
+                   '<ul>' +
+                   '<li><strong>Maintain:</strong> Continue choosing whole, low-GI foods.</li>' +
+                   '<li><strong>Caution:</strong> Even with low risk, processed foods can disrupt your hunger hormones (Leptin/Insulin).</li>' +
+                   '</ul></div>';
         }
 
-        return {
-            start: function() {
-                currentIndex = 0;
-                history = [];
-                scores = { "Rarely": 0, "Occasionally": 0, "Daily": 0 };
-                switchView('view-quiz');
-                renderQuestion();
-            },
+        html += '<div style="margin-top: 20px; text-align: left; font-size: 0.95rem; color: #555;">' +
+                '<p><strong>Next Steps:</strong></p>' +
+                '<p>Use the <em>Stop. Challenge. Choose.™</em> method whenever you feel emotional tension or stress triggers.</p>' +
+                '<p>Rely on the portion control plate system to avoid excessive calories.</p></div>';
 
-            handleAnswer: function(answer) {
-                scores[answer]++;
-                history.push(answer);
-                currentIndex++;
-
-                if (currentIndex < questions.length) {
-                    renderQuestion();
-                } else {
-                    QuizApp.finish();
-                }
-            },
-
-            goBack: function() {
-                if (currentIndex > 0) {
-                    const last = history.pop();
-                    if (last) scores[last]--;
-                    currentIndex--;
-                    renderQuestion();
-                }
-            },
-
-            finish: function() {
-                switchView('view-loading');
-                setTimeout(QuizApp.showResults, 1500);
-            },
-
-            showResults: function() {
-                switchView('view-results');
-                
-                // Logic based on Element 16 scoring
-                let result = "Mixed";
-                if (scores["Daily"] > 6) result = "High";
-                else if (scores["Occasionally"] > 6) result = "Moderate";
-                else if (scores["Rarely"] > 6) result = "Low";
-
-                const titleEl = document.getElementById('result-title');
-                const contentEl = document.getElementById('result-content');
-
-                titleEl.innerText = result + " Susceptibility";
-
-                let html = '<img src="dra_transparent.png" alt="Dr. A" style="max-width: 150px; height: auto; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto;">';
-
-                if (result === "High") {
-                    html += `
-                        <p>According to the "rat lever" study, you are highly susceptible to cues. The cue itself has likely become the reward.</p>
-                        <div class="result-box">
-                            <h3>🛡️ Your Action Plan</h3>
-                            <ul>
-                                <li><strong>Strict Avoidance:</strong> This is likely genetically predetermined. You must avoid sugary and starchy processed foods entirely to prevent relapse.</li>
-                                <li><strong>Rewire:</strong> Stick to the green-coded chart. Avoiding sweet tastes helps calm dopamine receptors.</li>
-                            </ul>
-                        </div>`;
-                } else if (result === "Moderate") {
-                    html += `
-                        <p>Like the moderate group in the study, you interact with the "lever" sometimes. In our obesigenic world, you are at risk.</p>
-                        <div class="result-box">
-                            <h3>🛡️ Your Action Plan</h3>
-                            <ul>
-                                <li><strong>Be Vigilant:</strong> You may not need total abstinence, but be very cautious with processed foods containing hidden sugars.</li>
-                                <li><strong>Read Labels:</strong> Look for hidden sugar and flour.</li>
-                            </ul>
-                        </div>`;
-                } else {
-                    html += `
-                        <p>You are like the group that only ate when hungry. You likely don't rely on food for emotional reward.</p>
-                        <div class="result-box">
-                            <h3>🛡️ Your Action Plan</h3>
-                            <ul>
-                                <li><strong>Maintain:</strong> Continue choosing whole, low-GI foods.</li>
-                                <li><strong>Caution:</strong> Even with low risk, processed foods can disrupt your hunger hormones (Leptin/Insulin).</li>
-                            </ul>
-                        </div>`;
-                }
-
-                html += `
-                    <div style="margin-top: 20px; text-align: left; font-size: 0.95rem; color: #555;">
-                        <p><strong>Next Steps:</strong></p>
-                        <p>Use the <em>Stop. Challenge. Choose.™</em> method whenever you feel emotional tension or stress triggers.</p>
-                        <p>Rely on the portion control plate system to avoid excessive calories.</p>
-                    </div>`;
-
-                contentEl.innerHTML = html;
-            }
-        };
-    })();
+        contentEl.innerHTML = html;
+    }
 </script>
 
 </body>
