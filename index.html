@@ -4,14 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Habits of Health Assessment</title>
-    
-    <meta property="og:title" content="Food Addiction Susceptibility Assessment">
-    <meta property="og:description" content="Discover your susceptibility profile and get a personalized action plan based on the Habits of Health system.">
-    <meta property="og:image" content="og-image.jpg">
-    <meta property="og:type" content="website">
-
     <style>
-        /* --- CSS STYLES --- */
         :root {
             --bg-beige: #F0EFEA;       
             --brand-rust: #C05A43;     
@@ -213,7 +206,8 @@
         <div id="view-quiz" class="view-section">
             <div class="question-container">
                 <div id="question-text" class="question-text">
-                    </div>
+                    Question goes here
+                </div>
             </div>
 
             <div class="options-grid">
@@ -247,7 +241,6 @@
 </div>
 
 <script>
-    // --- DATA ---
     var quizQuestions = [
         "1. I find it difficult to control how much I eat.",
         "2. I crash in the afternoon and have trouble waking up in the morning.",
@@ -264,8 +257,6 @@
     var currentQIndex = 0;
     var quizScores = { "Rarely": 0, "Occasionally": 0, "Daily": 0 };
 
-    // --- FUNCTIONS ---
-
     function startQuiz() {
         switchView('view-quiz');
         currentQIndex = 0;
@@ -277,18 +268,19 @@
         var qText = document.getElementById('question-text');
         var qNum = document.getElementById('q-current');
         
-        qText.innerText = quizQuestions[currentQIndex];
-        qNum.innerText = currentQIndex + 1;
+        if (quizQuestions[currentQIndex]) {
+            qText.textContent = quizQuestions[currentQIndex];
+            qNum.textContent = currentQIndex + 1;
+        }
     }
 
     function handleAnswer(answer) {
-        // Record score
-        quizScores[answer]++;
+        if (quizScores[answer] !== undefined) {
+            quizScores[answer]++;
+        }
         
-        // Next index
         currentQIndex++;
 
-        // Check completion
         if (currentQIndex < quizQuestions.length) {
             renderQuestion();
         } else {
@@ -298,14 +290,12 @@
 
     function finishQuiz() {
         switchView('view-loading');
-        // Wait 1.5 seconds then show results
         setTimeout(showResults, 1500);
     }
 
     function showResults() {
         switchView('view-results');
 
-        // Scoring Logic: >6 in a category determines result
         var result = "Mixed"; 
         if (quizScores["Daily"] > 6) {
             result = "High";
@@ -318,13 +308,13 @@
         var titleEl = document.getElementById('result-title');
         var contentEl = document.getElementById('result-content');
 
-        titleEl.innerText = result + " Susceptibility";
+        titleEl.textContent = result + " Susceptibility";
 
-        // Generate HTML
-        var html = "";
+        // Initialize HTML with Dr. A's photo
+        var html = '<img src="dra.png" alt="Dr. A" style="max-width: 150px; height: auto; border-radius: 50%; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto;">';
 
         if (result === "High") {
-            html = '<p>According to the "rat lever" study, you are highly susceptible to cues. The cue itself has likely become the reward.</p>' +
+            html += '<p>According to the "rat lever" study, you are highly susceptible to cues. The cue itself has likely become the reward.</p>' +
                    '<div class="result-box">' +
                    '<h3>🛡️ Your Action Plan</h3>' +
                    '<ul>' +
@@ -332,7 +322,7 @@
                    '<li><strong>Rewire:</strong> Stick to the green-coded chart. Avoiding sweet tastes helps calm dopamine receptors.</li>' +
                    '</ul></div>';
         } else if (result === "Moderate") {
-            html = '<p>Like the moderate group in the study, you interact with the "lever" sometimes. In our obesigenic world, you are at risk.</p>' +
+            html += '<p>Like the moderate group in the study, you interact with the "lever" sometimes. In our obesigenic world, you are at risk.</p>' +
                    '<div class="result-box">' +
                    '<h3>🛡️ Your Action Plan</h3>' +
                    '<ul>' +
@@ -340,7 +330,7 @@
                    '<li><strong>Read Labels:</strong> Look for hidden sugar and flour.</li>' +
                    '</ul></div>';
         } else {
-            html = '<p>You are like the group that only ate when hungry. You likely don\'t rely on food for emotional reward.</p>' +
+            html += '<p>You are like the group that only ate when hungry. You likely don\'t rely on food for emotional reward.</p>' +
                    '<div class="result-box">' +
                    '<h3>🛡️ Your Action Plan</h3>' +
                    '<ul>' +
