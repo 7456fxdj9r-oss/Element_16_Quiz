@@ -251,6 +251,8 @@
 <script>
     // --- 1. Data Definitions ---
     [cite_start]// Source: Element-16.pdf - Habits of Disease Food Addiction Susceptibility Quiz [cite: 11-54]
+    
+    // NOTE: Variables are defined in the global scope to prevent access errors.
     var quizQuestions = [
         "1. I find it difficult to control how much I eat.",
         "2. I crash in the afternoon and have trouble waking up in the morning.",
@@ -280,16 +282,20 @@
         var qText = document.getElementById('question-text');
         var qNum = document.getElementById('q-current');
         
-        // Safety check
-        if (quizQuestions[currentQIndex]) {
+        // Safety check to ensure data exists
+        if (quizQuestions && quizQuestions[currentQIndex]) {
             qText.textContent = quizQuestions[currentQIndex];
             qNum.textContent = currentQIndex + 1;
+        } else {
+            console.error("Error: Question data not found.");
         }
     }
 
     function handleAnswer(answer) {
         // Record score
-        quizScores[answer]++;
+        if (quizScores[answer] !== undefined) {
+            quizScores[answer]++;
+        }
         
         // Move next
         currentQIndex++;
@@ -304,6 +310,7 @@
 
     function finishQuiz() {
         switchView('view-loading');
+        // Small delay to simulate processing
         setTimeout(showResults, 1500);
     }
 
