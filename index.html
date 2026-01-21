@@ -6,7 +6,7 @@
     <title>Habits of Health Assessment</title>
     
     <meta property="og:title" content="Food Addiction Susceptibility Assessment">
-    <meta property="og:description" content="Discover your susceptibility profile and get a personalized action plan based on the Habits of Health system.">
+    <meta property="og:description" content="Discover your susceptibility profile based on the Habits of Health system.">
     <meta property="og:image" content="og-image.jpg">
     <meta property="og:type" content="website">
 
@@ -150,7 +150,7 @@
             background-color: #A04A36;
         }
 
-        /* Back Button Style */
+        /* Back Button */
         .btn-back {
             background: none;
             border: none;
@@ -172,7 +172,7 @@
             text-align: center;
             color: #999;
             font-size: 0.95rem;
-            margin-top: 20px;
+            margin-top: 40px;
             padding-bottom: 20px;
         }
 
@@ -229,9 +229,7 @@
         </div>
 
         <div id="view-quiz" class="view-section">
-            <button id="btn-back" class="btn-back" onclick="goBack()">
-                &#8592; Back
-            </button>
+            <button id="btn-back" class="btn-back" onclick="goBack()">&#8592; Back</button>
 
             <div class="question-container">
                 <div id="question-text" class="question-text">
@@ -270,7 +268,6 @@
 
 <script>
     // --- DATA ---
-    [cite_start]// Source: Element-16.pdf [cite: 12-54]
     var quizQuestions = [
         "1. I find it difficult to control how much I eat.",
         "2. I crash in the afternoon and have trouble waking up in the morning.",
@@ -285,8 +282,7 @@
     ];
 
     var currentQIndex = 0;
-    // We maintain a history array to know which answer to remove if user clicks 'Back'
-    var userHistory = []; 
+    var userHistory = []; // Tracks history for Back button
     var quizScores = { "Rarely": 0, "Occasionally": 0, "Daily": 0 };
 
     // --- FUNCTIONS ---
@@ -304,21 +300,24 @@
         var qNum = document.getElementById('q-current');
         var backBtn = document.getElementById('btn-back');
         
-        // Hide Back button on the first question
+        // Ensure text is set
+        if (quizQuestions[currentQIndex]) {
+            qText.innerText = quizQuestions[currentQIndex];
+            qNum.innerText = currentQIndex + 1;
+        }
+
+        // Hide Back button on first question
         if (currentQIndex === 0) {
             backBtn.style.visibility = 'hidden';
         } else {
             backBtn.style.visibility = 'visible';
         }
-
-        qText.innerText = quizQuestions[currentQIndex];
-        qNum.innerText = currentQIndex + 1;
     }
 
     function handleAnswer(answer) {
         // Record score
         quizScores[answer]++;
-        // Save to history so we can undo it later
+        // Save history
         userHistory.push(answer);
         
         // Next index
@@ -334,13 +333,12 @@
 
     function goBack() {
         if (currentQIndex > 0) {
-            // Remove the last answer from history
-            var lastAnswer = userHistory.pop();
-            // Remove the score
-            if (lastAnswer) {
-                quizScores[lastAnswer]--;
+            // Remove last answer from score
+            var lastAns = userHistory.pop();
+            if (lastAns) {
+                quizScores[lastAns]--;
             }
-            // Go back one step
+            // Move back
             currentQIndex--;
             renderQuestion();
         }
@@ -370,41 +368,40 @@
 
         titleEl.innerText = result + " Susceptibility";
 
-        // Generate HTML with Dr. A's transparent photo
-        // Note: Using the transparent PNG version here
+        // Generate HTML with Dr. A photo
+        // IMPORTANT: Ensure your file is named 'dra_transparent.png'
         var html = '<img src="dra_transparent.png" alt="Dr. A" style="max-width: 150px; height: auto; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto;">';
 
-        [cite_start]// Content logic derived from source documents [cite: 3-5, 29]
         if (result === "High") {
-            html += '<p>According to the "rat lever" study, you are highly susceptible to cues. The cue itself has likely become the reward.</p>' +
+            html += '<p>According to the "rat lever" study, you are highly susceptible to cues. [cite_start]The cue itself has likely become the reward [cite: 3-5].</p>' +
                    '<div class="result-box">' +
                    '<h3>🛡️ Your Action Plan</h3>' +
                    '<ul>' +
-                   '<li><strong>Strict Avoidance:</strong> This is likely genetically predetermined. You must avoid sugary and starchy processed foods entirely to prevent relapse.</li>' +
+                   '<li><strong>Strict Avoidance:</strong> This is likely genetically predetermined. [cite_start]You must avoid sugary and starchy processed foods entirely to prevent relapse[cite: 29].</li>' +
                    '<li><strong>Rewire:</strong> Stick to the green-coded chart. Avoiding sweet tastes helps calm dopamine receptors.</li>' +
                    '</ul></div>';
         } else if (result === "Moderate") {
-            html += '<p>Like the moderate group in the study, you interact with the "lever" sometimes. In our obesigenic world, you are at risk.</p>' +
+            html += '<p>Like the moderate group in the study, you interact with the "lever" sometimes. [cite_start]In our obesigenic world, you are at risk[cite: 29].</p>' +
                    '<div class="result-box">' +
                    '<h3>🛡️ Your Action Plan</h3>' +
                    '<ul>' +
-                   '<li><strong>Be Vigilant:</strong> You may not need total abstinence, but be very cautious with processed foods containing hidden sugars.</li>' +
+                   [cite_start]'<li><strong>Be Vigilant:</strong> You may not need total abstinence, but be very cautious with processed foods containing hidden sugars[cite: 29].</li>' +
                    '<li><strong>Read Labels:</strong> Look for hidden sugar and flour.</li>' +
                    '</ul></div>';
         } else {
-            html += '<p>You are like the group that only ate when hungry. You likely don\'t rely on food for emotional reward.</p>' +
+            html += '<p>You are like the group that only ate when hungry. [cite_start]You likely don\'t rely on food for emotional reward[cite: 29].</p>' +
                    '<div class="result-box">' +
                    '<h3>🛡️ Your Action Plan</h3>' +
                    '<ul>' +
-                   '<li><strong>Maintain:</strong> Continue choosing whole, low-GI foods.</li>' +
-                   '<li><strong>Caution:</strong> Even with low risk, processed foods can disrupt your hunger hormones (Leptin/Insulin).</li>' +
+                   [cite_start]'<li><strong>Maintain:</strong> Continue choosing whole, low-GI foods[cite: 29].</li>' +
+                   [cite_start]'<li><strong>Caution:</strong> Even with low risk, processed foods can disrupt your hunger hormones (Leptin/Insulin)[cite: 29].</li>' +
                    '</ul></div>';
         }
 
         html += '<div style="margin-top: 20px; text-align: left; font-size: 0.95rem; color: #555;">' +
                 '<p><strong>Next Steps:</strong></p>' +
-                '<p>Use the <em>Stop. Challenge. Choose.™</em> method whenever you feel emotional tension or stress triggers.</p>' +
-                '<p>Rely on the portion control plate system to avoid excessive calories.</p></div>';
+                '<p>Use the <em>Stop. Challenge. [cite_start]Choose.™</em> method whenever you feel emotional tension or stress triggers[cite: 29].</p>' +
+                [cite_start]'<p>Rely on the portion control plate system to avoid excessive calories[cite: 29].</p></div>';
 
         contentEl.innerHTML = html;
     }
