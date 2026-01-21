@@ -91,6 +91,7 @@
             margin-bottom: 30px;
         }
 
+        /* Question Container */
         .question-container {
             min-height: 120px; 
             display: flex;
@@ -105,8 +106,10 @@
             font-weight: 600;
             text-align: center;
             line-height: 1.4;
+            display: block; /* Forced block display */
         }
 
+        /* Options Grid */
         .options-grid {
             display: flex;
             flex-direction: column;
@@ -176,6 +179,7 @@
             padding-bottom: 20px;
         }
 
+        /* Views */
         .view-section {
             display: none;
             width: 100%;
@@ -225,21 +229,22 @@
         <div id="view-intro" class="view-section active">
             <h1>Food Addiction Susceptibility</h1>
             <p>This assessment helps you understand your relationship with sugar and refined flour. Based on the <em>Habits of Health</em> system, identifying your predisposition is the first step to rewiring your brain.</p>
-            <button class="btn-start" onclick="startQuiz()">Begin Assessment</button>
+            <button class="btn-start" onclick="QuizApp.start()">Begin Assessment</button>
         </div>
 
         <div id="view-quiz" class="view-section">
-            <button id="btn-back" class="btn-back" onclick="goBack()">&#8592; Back</button>
+            <button id="btn-back" class="btn-back" onclick="QuizApp.goBack()">&#8592; Back</button>
 
             <div class="question-container">
                 <div id="question-text" class="question-text">
-                    </div>
+                    Loading Question...
+                </div>
             </div>
 
             <div class="options-grid">
-                <button class="btn-option" onclick="handleAnswer('Rarely')">Rarely</button>
-                <button class="btn-option" onclick="handleAnswer('Occasionally')">Occasionally</button>
-                <button class="btn-option" onclick="handleAnswer('Daily')">Daily</button>
+                <button class="btn-option" onclick="QuizApp.handleAnswer('Rarely')">Rarely</button>
+                <button class="btn-option" onclick="QuizApp.handleAnswer('Occasionally')">Occasionally</button>
+                <button class="btn-option" onclick="QuizApp.handleAnswer('Daily')">Daily</button>
             </div>
             
             <div class="footer-progress">
@@ -267,152 +272,144 @@
 </div>
 
 <script>
-    // --- DATA ---
-    var quizQuestions = [
-        "1. I find it difficult to control how much I eat.",
-        "2. I crash in the afternoon and have trouble waking up in the morning.",
-        "3. I have cravings for specific foods.",
-        "4. I suffer from moodiness, headaches, or fogginess.",
-        "5. When I only eat a moderate amount of food I am not satisfied.",
-        "6. I feel guilty after eating.",
-        "7. I spend a considerable amount of time thinking about food.",
-        "8. I eat even if I am not hungry because I crave a food.",
-        "9. I eat large amounts of food and feel powerless to stop.",
-        "10. I crave carbohydrates like pasta, bread, white rice, or desserts."
-    ];
-
-    var currentQIndex = 0;
-    var userHistory = []; // Tracks history for Back button
-    var quizScores = { "Rarely": 0, "Occasionally": 0, "Daily": 0 };
-
-    // --- FUNCTIONS ---
-
-    function startQuiz() {
-        switchView('view-quiz');
-        currentQIndex = 0;
-        userHistory = [];
-        quizScores = { "Rarely": 0, "Occasionally": 0, "Daily": 0 };
-        renderQuestion();
-    }
-
-    function renderQuestion() {
-        var qText = document.getElementById('question-text');
-        var qNum = document.getElementById('q-current');
-        var backBtn = document.getElementById('btn-back');
+    // Namespace to prevent conflicts
+    const QuizApp = (function() {
         
-        // Ensure text is set
-        if (quizQuestions[currentQIndex]) {
-            qText.innerText = quizQuestions[currentQIndex];
-            qNum.innerText = currentQIndex + 1;
+        // Data derived from Element 16 source
+        const questions = [
+            "1. I find it difficult to control how much I eat.",
+            "2. I crash in the afternoon and have trouble waking up in the morning.",
+            "3. I have cravings for specific foods.",
+            "4. I suffer from moodiness, headaches, or fogginess.",
+            "5. When I only eat a moderate amount of food I am not satisfied.",
+            "6. I feel guilty after eating.",
+            "7. I spend a considerable amount of time thinking about food.",
+            "8. I eat even if I am not hungry because I crave a food.",
+            "9. I eat large amounts of food and feel powerless to stop.",
+            "10. I crave carbohydrates like pasta, bread, white rice, or desserts."
+        ];
+
+        let currentIndex = 0;
+        let history = []; 
+        let scores = { "Rarely": 0, "Occasionally": 0, "Daily": 0 };
+
+        function switchView(viewId) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
         }
 
-        // Hide Back button on first question
-        if (currentQIndex === 0) {
-            backBtn.style.visibility = 'hidden';
-        } else {
-            backBtn.style.visibility = 'visible';
-        }
-    }
+        function renderQuestion() {
+            const txtEl = document.getElementById('question-text');
+            const numEl = document.getElementById('q-current');
+            const backBtn = document.getElementById('btn-back');
 
-    function handleAnswer(answer) {
-        // Record score
-        quizScores[answer]++;
-        // Save history
-        userHistory.push(answer);
-        
-        // Next index
-        currentQIndex++;
-
-        // Check completion
-        if (currentQIndex < quizQuestions.length) {
-            renderQuestion();
-        } else {
-            finishQuiz();
-        }
-    }
-
-    function goBack() {
-        if (currentQIndex > 0) {
-            // Remove last answer from score
-            var lastAns = userHistory.pop();
-            if (lastAns) {
-                quizScores[lastAns]--;
+            if (questions[currentIndex]) {
+                txtEl.innerText = questions[currentIndex];
+                numEl.innerText = currentIndex + 1;
             }
-            // Move back
-            currentQIndex--;
-            renderQuestion();
-        }
-    }
 
-    function finishQuiz() {
-        switchView('view-loading');
-        // Wait 1.5 seconds then show results
-        setTimeout(showResults, 1500);
-    }
-
-    function showResults() {
-        switchView('view-results');
-
-        [cite_start]// Scoring Logic: >6 in a category determines result [cite: 56-58]
-        var result = "Mixed"; 
-        if (quizScores["Daily"] > 6) {
-            result = "High";
-        } else if (quizScores["Occasionally"] > 6) {
-            result = "Moderate";
-        } else if (quizScores["Rarely"] > 6) {
-            result = "Low";
+            // Hide back button on first question
+            if (currentIndex === 0) {
+                backBtn.style.visibility = 'hidden';
+            } else {
+                backBtn.style.visibility = 'visible';
+            }
         }
 
-        var titleEl = document.getElementById('result-title');
-        var contentEl = document.getElementById('result-content');
+        return {
+            start: function() {
+                currentIndex = 0;
+                history = [];
+                scores = { "Rarely": 0, "Occasionally": 0, "Daily": 0 };
+                switchView('view-quiz');
+                renderQuestion();
+            },
 
-        titleEl.innerText = result + " Susceptibility";
+            handleAnswer: function(answer) {
+                scores[answer]++;
+                history.push(answer);
+                currentIndex++;
 
-        // Generate HTML with Dr. A photo
-        // IMPORTANT: Ensure your file is named 'dra_transparent.png'
-        var html = '<img src="dra_transparent.png" alt="Dr. A" style="max-width: 150px; height: auto; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto;">';
+                if (currentIndex < questions.length) {
+                    renderQuestion();
+                } else {
+                    QuizApp.finish();
+                }
+            },
 
-        if (result === "High") {
-            html += '<p>According to the "rat lever" study, you are highly susceptible to cues. [cite_start]The cue itself has likely become the reward [cite: 3-5].</p>' +
-                   '<div class="result-box">' +
-                   '<h3>🛡️ Your Action Plan</h3>' +
-                   '<ul>' +
-                   '<li><strong>Strict Avoidance:</strong> This is likely genetically predetermined. [cite_start]You must avoid sugary and starchy processed foods entirely to prevent relapse[cite: 29].</li>' +
-                   '<li><strong>Rewire:</strong> Stick to the green-coded chart. Avoiding sweet tastes helps calm dopamine receptors.</li>' +
-                   '</ul></div>';
-        } else if (result === "Moderate") {
-            html += '<p>Like the moderate group in the study, you interact with the "lever" sometimes. [cite_start]In our obesigenic world, you are at risk[cite: 29].</p>' +
-                   '<div class="result-box">' +
-                   '<h3>🛡️ Your Action Plan</h3>' +
-                   '<ul>' +
-                   [cite_start]'<li><strong>Be Vigilant:</strong> You may not need total abstinence, but be very cautious with processed foods containing hidden sugars[cite: 29].</li>' +
-                   '<li><strong>Read Labels:</strong> Look for hidden sugar and flour.</li>' +
-                   '</ul></div>';
-        } else {
-            html += '<p>You are like the group that only ate when hungry. [cite_start]You likely don\'t rely on food for emotional reward[cite: 29].</p>' +
-                   '<div class="result-box">' +
-                   '<h3>🛡️ Your Action Plan</h3>' +
-                   '<ul>' +
-                   [cite_start]'<li><strong>Maintain:</strong> Continue choosing whole, low-GI foods[cite: 29].</li>' +
-                   [cite_start]'<li><strong>Caution:</strong> Even with low risk, processed foods can disrupt your hunger hormones (Leptin/Insulin)[cite: 29].</li>' +
-                   '</ul></div>';
-        }
+            goBack: function() {
+                if (currentIndex > 0) {
+                    const last = history.pop();
+                    if (last) scores[last]--;
+                    currentIndex--;
+                    renderQuestion();
+                }
+            },
 
-        html += '<div style="margin-top: 20px; text-align: left; font-size: 0.95rem; color: #555;">' +
-                '<p><strong>Next Steps:</strong></p>' +
-                '<p>Use the <em>Stop. Challenge. [cite_start]Choose.™</em> method whenever you feel emotional tension or stress triggers[cite: 29].</p>' +
-                [cite_start]'<p>Rely on the portion control plate system to avoid excessive calories[cite: 29].</p></div>';
+            finish: function() {
+                switchView('view-loading');
+                setTimeout(QuizApp.showResults, 1500);
+            },
 
-        contentEl.innerHTML = html;
-    }
+            showResults: function() {
+                switchView('view-results');
+                
+                // Logic based on Element 16 scoring
+                let result = "Mixed";
+                if (scores["Daily"] > 6) result = "High";
+                else if (scores["Occasionally"] > 6) result = "Moderate";
+                else if (scores["Rarely"] > 6) result = "Low";
 
-    function switchView(id) {
-        var views = document.querySelectorAll('.view-section');
-        for (var i = 0; i < views.length; i++) {
-            views[i].classList.remove('active');
-        }
-        document.getElementById(id).classList.add('active');
-    }
+                const titleEl = document.getElementById('result-title');
+                const contentEl = document.getElementById('result-content');
+
+                titleEl.innerText = result + " Susceptibility";
+
+                let html = '<img src="dra_transparent.png" alt="Dr. A" style="max-width: 150px; height: auto; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto;">';
+
+                if (result === "High") {
+                    html += `
+                        <p>According to the "rat lever" study, you are highly susceptible to cues. The cue itself has likely become the reward.</p>
+                        <div class="result-box">
+                            <h3>🛡️ Your Action Plan</h3>
+                            <ul>
+                                <li><strong>Strict Avoidance:</strong> This is likely genetically predetermined. You must avoid sugary and starchy processed foods entirely to prevent relapse.</li>
+                                <li><strong>Rewire:</strong> Stick to the green-coded chart. Avoiding sweet tastes helps calm dopamine receptors.</li>
+                            </ul>
+                        </div>`;
+                } else if (result === "Moderate") {
+                    html += `
+                        <p>Like the moderate group in the study, you interact with the "lever" sometimes. In our obesigenic world, you are at risk.</p>
+                        <div class="result-box">
+                            <h3>🛡️ Your Action Plan</h3>
+                            <ul>
+                                <li><strong>Be Vigilant:</strong> You may not need total abstinence, but be very cautious with processed foods containing hidden sugars.</li>
+                                <li><strong>Read Labels:</strong> Look for hidden sugar and flour.</li>
+                            </ul>
+                        </div>`;
+                } else {
+                    html += `
+                        <p>You are like the group that only ate when hungry. You likely don't rely on food for emotional reward.</p>
+                        <div class="result-box">
+                            <h3>🛡️ Your Action Plan</h3>
+                            <ul>
+                                <li><strong>Maintain:</strong> Continue choosing whole, low-GI foods.</li>
+                                <li><strong>Caution:</strong> Even with low risk, processed foods can disrupt your hunger hormones (Leptin/Insulin).</li>
+                            </ul>
+                        </div>`;
+                }
+
+                html += `
+                    <div style="margin-top: 20px; text-align: left; font-size: 0.95rem; color: #555;">
+                        <p><strong>Next Steps:</strong></p>
+                        <p>Use the <em>Stop. Challenge. Choose.™</em> method whenever you feel emotional tension or stress triggers.</p>
+                        <p>Rely on the portion control plate system to avoid excessive calories.</p>
+                    </div>`;
+
+                contentEl.innerHTML = html;
+            }
+        };
+    })();
 </script>
 
 </body>
