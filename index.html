@@ -4,8 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Habits of Health Assessment</title>
+    
+    <meta property="og:title" content="Food Addiction Susceptibility Assessment">
+    <meta property="og:description" content="Discover your susceptibility profile and get a personalized action plan based on the Habits of Health system.">
+    <meta property="og:image" content="og-image.jpg">
+    <meta property="og:type" content="website">
+
     <style>
-        /* CSS STYLING */
+        /* --- CSS STYLES --- */
         :root {
             --bg-beige: #F0EFEA;       
             --brand-rust: #C05A43;     
@@ -180,3 +186,185 @@
             border-top: 5px solid var(--brand-rust);
             border-radius: 50%;
             width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px auto;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header">
+        <img src="hoh_logo.png" alt="Habits of Health" class="app-logo" onerror="this.style.display='none'; document.querySelector('.logo-fallback').style.display='block';">
+        <div class="logo-fallback">HABITS of HEALTH</div>
+    </div>
+
+    <div class="content-area">
+        
+        <div id="view-intro" class="view-section active">
+            <h1>Food Addiction Susceptibility</h1>
+            <p>This assessment helps you understand your relationship with sugar and refined flour. Based on the <em>Habits of Health</em> system, identifying your predisposition is the first step to rewiring your brain.</p>
+            <button class="btn-start" onclick="startQuiz()">Begin Assessment</button>
+        </div>
+
+        <div id="view-quiz" class="view-section">
+            <div class="question-container">
+                <div id="question-text" class="question-text">
+                    </div>
+            </div>
+
+            <div class="options-grid">
+                <button class="btn-option" onclick="handleAnswer('Rarely')">Rarely</button>
+                <button class="btn-option" onclick="handleAnswer('Occasionally')">Occasionally</button>
+                <button class="btn-option" onclick="handleAnswer('Daily')">Daily</button>
+            </div>
+            
+            <div class="footer-progress">
+                Question <span id="q-current">1</span> of 10
+            </div>
+        </div>
+
+        <div id="view-loading" class="view-section">
+            <div style="text-align: center; padding-top: 40px;">
+                <div class="spinner"></div>
+                <h2 style="margin-top: 20px; font-size: 1.5rem;">Analyzing Profile...</h2>
+                <p>Calculating susceptibility patterns...</p>
+            </div>
+        </div>
+
+        <div id="view-results" class="view-section">
+            <div style="text-align: center;">
+                <h2 id="result-title" style="color: var(--brand-rust);"></h2>
+                <div id="result-content"></div>
+                <button class="btn-restart" style="margin-top: 30px;" onclick="location.reload()">Restart</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // --- DATA ---
+    var quizQuestions = [
+        "1. I find it difficult to control how much I eat.",
+        "2. I crash in the afternoon and have trouble waking up in the morning.",
+        "3. I have cravings for specific foods.",
+        "4. I suffer from moodiness, headaches, or fogginess.",
+        "5. When I only eat a moderate amount of food I am not satisfied.",
+        "6. I feel guilty after eating.",
+        "7. I spend a considerable amount of time thinking about food.",
+        "8. I eat even if I am not hungry because I crave a food.",
+        "9. I eat large amounts of food and feel powerless to stop.",
+        "10. I crave carbohydrates like pasta, bread, white rice, or desserts."
+    ];
+
+    var currentQIndex = 0;
+    var quizScores = { "Rarely": 0, "Occasionally": 0, "Daily": 0 };
+
+    // --- FUNCTIONS ---
+
+    function startQuiz() {
+        switchView('view-quiz');
+        currentQIndex = 0;
+        quizScores = { "Rarely": 0, "Occasionally": 0, "Daily": 0 };
+        renderQuestion();
+    }
+
+    function renderQuestion() {
+        var qText = document.getElementById('question-text');
+        var qNum = document.getElementById('q-current');
+        
+        qText.innerText = quizQuestions[currentQIndex];
+        qNum.innerText = currentQIndex + 1;
+    }
+
+    function handleAnswer(answer) {
+        // Record score
+        quizScores[answer]++;
+        
+        // Next index
+        currentQIndex++;
+
+        // Check completion
+        if (currentQIndex < quizQuestions.length) {
+            renderQuestion();
+        } else {
+            finishQuiz();
+        }
+    }
+
+    function finishQuiz() {
+        switchView('view-loading');
+        // Wait 1.5 seconds then show results
+        setTimeout(showResults, 1500);
+    }
+
+    function showResults() {
+        switchView('view-results');
+
+        // Scoring Logic: >6 in a category determines result
+        var result = "Mixed"; 
+        if (quizScores["Daily"] > 6) {
+            result = "High";
+        } else if (quizScores["Occasionally"] > 6) {
+            result = "Moderate";
+        } else if (quizScores["Rarely"] > 6) {
+            result = "Low";
+        }
+
+        var titleEl = document.getElementById('result-title');
+        var contentEl = document.getElementById('result-content');
+
+        titleEl.innerText = result + " Susceptibility";
+
+        // Generate HTML
+        var html = "";
+
+        if (result === "High") {
+            html = '<p>According to the "rat lever" study, you are highly susceptible to cues. The cue itself has likely become the reward.</p>' +
+                   '<div class="result-box">' +
+                   '<h3>🛡️ Your Action Plan</h3>' +
+                   '<ul>' +
+                   '<li><strong>Strict Avoidance:</strong> This is likely genetically predetermined. You must avoid sugary and starchy processed foods entirely to prevent relapse.</li>' +
+                   '<li><strong>Rewire:</strong> Stick to the green-coded chart. Avoiding sweet tastes helps calm dopamine receptors.</li>' +
+                   '</ul></div>';
+        } else if (result === "Moderate") {
+            html = '<p>Like the moderate group in the study, you interact with the "lever" sometimes. In our obesigenic world, you are at risk.</p>' +
+                   '<div class="result-box">' +
+                   '<h3>🛡️ Your Action Plan</h3>' +
+                   '<ul>' +
+                   '<li><strong>Be Vigilant:</strong> You may not need total abstinence, but be very cautious with processed foods containing hidden sugars.</li>' +
+                   '<li><strong>Read Labels:</strong> Look for hidden sugar and flour.</li>' +
+                   '</ul></div>';
+        } else {
+            html = '<p>You are like the group that only ate when hungry. You likely don\'t rely on food for emotional reward.</p>' +
+                   '<div class="result-box">' +
+                   '<h3>🛡️ Your Action Plan</h3>' +
+                   '<ul>' +
+                   '<li><strong>Maintain:</strong> Continue choosing whole, low-GI foods.</li>' +
+                   '<li><strong>Caution:</strong> Even with low risk, processed foods can disrupt your hunger hormones (Leptin/Insulin).</li>' +
+                   '</ul></div>';
+        }
+
+        html += '<div style="margin-top: 20px; text-align: left; font-size: 0.95rem; color: #555;">' +
+                '<p><strong>Next Steps:</strong></p>' +
+                '<p>Use the <em>Stop. Challenge. Choose.™</em> method whenever you feel emotional tension or stress triggers.</p>' +
+                '<p>Rely on the portion control plate system to avoid excessive calories.</p></div>';
+
+        contentEl.innerHTML = html;
+    }
+
+    function switchView(id) {
+        var views = document.querySelectorAll('.view-section');
+        for (var i = 0; i < views.length; i++) {
+            views[i].classList.remove('active');
+        }
+        document.getElementById(id).classList.add('active');
+    }
+</script>
+
+</body>
+</html>
