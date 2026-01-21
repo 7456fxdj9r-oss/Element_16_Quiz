@@ -6,7 +6,7 @@
     <title>Habits of Health Assessment</title>
     <style>
         :root {
-            /* Branding Colors from Habits of Health Website & Stones */
+            /* Branding Colors from Habits of Health Earth Palette */
             --hoh-rust: #D2691E;       /* "Clay" stone / Call to Action */
             --hoh-orange: #E87E56;     /* Brighter Rust for hover */
             --hoh-green: #7FAB56;      /* "Olive" stone / Health */
@@ -219,7 +219,7 @@
 
 <div class="app-container">
     <div class="logo-header">
-        <img src="image_e67e8a.png" alt="Habits of Health Logo" class="app-logo">
+        <img src="hoh_logo.png" alt="Habits of Health Logo" class="app-logo">
     </div>
 
     <div class="progress-container">
@@ -271,6 +271,7 @@
 
 <script>
     // --- Data ---
+    [cite_start]// Source: Habits of Disease Food Addiction Susceptibility Quiz [cite: 1, 11]
     const questions = [
         "I find it difficult to control how much I eat.",
         "I crash in the afternoon and have trouble waking up in the morning.",
@@ -328,6 +329,8 @@
     function calculateResults() {
         switchView('view-result');
 
+        [cite_start]// Scoring Logic based on Source [cite: 9]
+        [cite_start]// >6 in a category determines the result [cite: 56, 57, 58]
         let result = "Mixed";
         if (scores["Daily"] > 6) result = "High";
         else if (scores["Occasionally"] > 6) result = "Moderate";
@@ -347,6 +350,7 @@
             badge.classList.add('bg-high');
             badge.innerText = "High Susceptibility";
             title.innerText = "High Susceptibility";
+            [cite_start]// Content Source: Rat study [cite: 3, 4] [cite_start]and Action Plans [cite: 12]
             content.innerHTML = `
                 <div class="context-card" style="border-color: #C0392B;">
                     <h3 style="color:#C0392B">🔬 The Science: The "Rat Lever" Effect</h3>
@@ -398,6 +402,7 @@
             triggerConfetti();
         }
 
+        [cite_start]// General Advice for all [cite: 12]
         content.innerHTML += `
             <p style="margin-top:20px; font-style:italic; font-size:0.95rem; text-align:center;">
                 <strong>Next Step:</strong> Use the <em>Stop. Challenge. Choose.™</em> method if you feel emotional tension or stress triggers.
