@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habits of Health - Susceptibility Quiz</title>
+    <style>
+        /* HABITS OF HEALTH THEME PALETTE */
+        :root {
+            --hoh-navy: #243746;       /* Primary Text & Headers */
+            --hoh-rust: #A85A32;       /* Accent & Active States */
+            --hoh-sage: #8BA35B;       /* Low Risk / Health */
+            --hoh-burgundy: #8B3A3A;   /* High Risk */
+            --hoh-beige: #F4F1EA;      /* Background (Paper/Workbook feel) */
+            --hoh-white: #FFFFFF;
+            --hoh-grey: #E0E0E0;
+        }
+
+        body {
+            font-family: 'Open Sans', 'Segoe UI', Helvetica, sans-serif; /* Clean Sans-Serif body */
+            background-color: var(--hoh-beige);
+            color: var(--hoh-navy);
+            margin: 0;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        /* TYPOGRAPHY */
+        h1, h2, h3 {
+            font-family: 'Georgia', 'Times New Roman', serif; /* Classic Serif for Authority */
+            font-weight: normal;
+        }
+
+        /* LAYOUT CONTAINER */
+        .workbook-container {
+            max-width: 750px;
+            margin: 0 auto;
+            background: var(--hoh-white);
+            padding: 50px;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(36, 55, 70, 0.1);
+            border-top: 8px solid var(--hoh-navy); /* Branding Stripe */
+        }
+
+        /* HEADER SECTION */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--hoh-grey);
+            padding-bottom: 20px;
+        }
+
+        .header h1 {
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 1.8rem;
+            margin: 0;
+            color: var(--hoh-navy);
+        }
+        
+        .header .sub-title {
+            font-style: italic;
+            font-family: 'Georgia', serif;
+            color: var(--hoh-rust);
+            font-size: 1.2rem;
+            margin-top: 5px;
+        }
+
+        .intro-box {
+            background-color: rgba(36, 55, 70, 0.05);
+            padding: 20px;
+            border-left: 4px solid var(--hoh-rust);
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        /* FORM ELEMENTS */
+        .question-item {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed var(--hoh-grey); /* Workbook dashed line style */
+        }
+
+        .question-item:last-child {
+            border-bottom: none;
+        }
+
+        .question-text {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+        }
+
+        .options-wrapper {
+            display: flex;
+            gap: 20px;
+        }
+
+        /* CUSTOM RADIO BUTTONS */
+        .radio-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            padding-left: 30px;
+            font-size: 0.95rem;
+            color: #555;
+            transition: color 0.2s;
+        }
+
+        .radio-label:hover {
+            color: var(--hoh-rust);
+        }
+
+        .radio-label input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        /* Custom checkmark circle */
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 20px;
+            width: 20px;
+            background-color: #fff;
+            border: 2px solid var(--hoh-navy);
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        /* On checked */
+        .radio-label input:checked ~ .checkmark {
+            background-color: var(--hoh-rust);
+            border-color: var(--hoh-rust);
+        }
+
+        /* Inner dot */
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        .radio-label input:checked ~ .checkmark:after {
+            display: block;
+            top: 6px;
+            left: 6px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: white;
+        }
+
+        /* ACTION BUTTON */
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background-color: var(--hoh-navy);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            font-family: 'Georgia', serif;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 20px;
+            text-transform: uppercase;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--hoh-rust);
+        }
+
+        /* RESULTS SECTION */
+        #result-area {
+            display: none;
+            margin-top: 40px;
+            text-align: center;
+            padding: 30px;
+            border-radius: 8px;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        #result-area h2 {
+            margin-top: 0;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .score-badge {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 5px 15px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        /* Result Variants */
+        .res-low {
+            background-color: rgba(139, 163, 91, 0.15); /* Sage tint */
+            color: #5d6f3b;
+            border: 2px solid var(--hoh-sage);
+        }
+        .res-mod {
+            background-color: rgba(168, 90, 50, 0.1); /* Rust tint */
+            color: var(--hoh-rust);
+            border: 2px solid var(--hoh-rust);
+        }
+        .res-high {
+            background-color: rgba(139, 58, 58, 0.1); /* Burgundy tint */
+            color: var(--hoh-burgundy);
+            border: 2px solid var(--hoh-burgundy);
+        }
+        .res-mixed {
+            background-color: #f0f4f8;
+            color: var(--hoh-navy);
+            border: 2px solid var(--hoh-navy);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 600px) {
+            .workbook-container { padding: 20px; }
+            .options-wrapper { flex-direction: column; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="workbook-container">
+    <div class="header">
+        <h1>Habits <span style="font-style:italic; text-transform:lowercase; font-family:'Georgia';">of</span> Health</h1>
+        <div class="sub-title">Food Addiction Susceptibility Quiz</div>
+    </div>
+
+    <div class="intro-box">
+        <p><strong>Assessment:</strong> Just like the rats in the study, humans stratify into groups based on their response to addictive cues. Use this tool to become aware of your level of risk so you can be more vigilant.</p>
+    </div>
+
+    <form id="quizForm">
+        <div id="quiz-content">
+            </div>
+        <button type="button" class="btn-submit" onclick="calculateResults()">Calculate My Profile</button>
+    </form>
+
+    <div id="result-area">
+        </div>
+</div>
+
+<script>
+    // Questions from the document [cite: 12-54]
+    const questions = [
+        "1. I find it difficult to control how much I eat",
+        "2. I crash in the afternoon and have trouble waking up in the morning",
+        "3. I have cravings for specific foods",
+        "4. I suffer from moodiness, headaches, or fogginess",
+        "5. When I only eat a moderate amount of food I am not satisfied",
+        "6. I feel guilty after eating",
+        "7. I spend a considerable amount of time thinking about food",
+        "8. I eat even if I am not hungry because I crave a food",
+        "9. I eat large amounts of food and feel powerless to stop",
+        "10. I crave carbohydrates like pasta, bread, white rice, or desserts"
+    ];
+
+    const options = ["Rarely", "Occasionally", "Daily"];
+
+    // Render the questions
+    const quizContent = document.getElementById('quiz-content');
+
+    questions.forEach((q, index) => {
+        const item = document.createElement('div');
+        item.className = 'question-item';
+
+        const qText = document.createElement('span');
+        qText.className = 'question-text';
+        qText.textContent = q;
+        item.appendChild(qText);
+
+        const optionsDiv = document.createElement('div');
+        optionsDiv.className = 'options-wrapper';
+
+        options.forEach(opt => {
+            const label = document.createElement('label');
+            label.className = 'radio-label';
+            
+            const input = document.createElement('input');
+            input.type = 'radio';
+            input.name = `q${index}`;
+            input.value = opt;
+            
+            const checkmark = document.createElement('span');
+            checkmark.className = 'checkmark';
+
+            label.appendChild(input);
+            label.appendChild(checkmark);
+            label.appendChild(document.createTextNode(opt));
+            
+            optionsDiv.appendChild(label);
+        });
+
+        item.appendChild(optionsDiv);
+        quizContent.appendChild(item);
+    });
+
+    // Scoring Logic Source: 
+    function calculateResults() {
+        const form = document.getElementById('quizForm');
+        let counts = { "Rarely": 0, "Occasionally": 0, "Daily": 0 };
+        let answered = 0;
+
+        for (let i = 0; i < questions.length; i++) {
+            const radios = form.elements[`q${i}`];
+            for (const radio of radios) {
+                if (radio.checked) {
+                    counts[radio.value]++;
+                    answered++;
+                    break;
+                }
+            }
+        }
+
+        if (answered < questions.length) {
+            alert("Please answer all questions to see your profile.");
+            return;
+        }
+
+        const resultArea = document.getElementById('result-area');
+        let title, msg, className;
+
+        // Logic: Greater than 6 in a specific category
+        if (counts["Daily"] > 6) {
+            title = "High Susceptibility";
+            msg = "Your results indicate a high level of risk for food addiction cues.";
+            className = "res-high";
+        } else if (counts["Occasionally"] > 6) {
+            title = "Moderate Susceptibility";
+            msg = "Your results indicate a moderate level of risk.";
+            className = "res-mod";
+        } else if (counts["Rarely"] > 6) {
+            title = "Low Susceptibility";
+            msg = "Your results indicate a low level of risk.";
+            className = "res-low";
+        } else {
+            title = "Mixed Susceptibility";
+            msg = "Your answers are mixed. You do not show a dominant pattern (>6) in any single category.";
+            className = "res-mixed";
+        }
+
+        resultArea.innerHTML = `
+            <h2>${title}</h2>
+            <p>${msg}</p>
+            <div class="score-badge">
+                Rarely: ${counts["Rarely"]} | Occasionally: ${counts["Occasionally"]} | Daily: ${counts["Daily"]}
+            </div>
+        `;
+        
+        resultArea.className = className;
+        resultArea.style.display = 'block';
+        resultArea.scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
