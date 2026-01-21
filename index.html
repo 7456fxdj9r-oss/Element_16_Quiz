@@ -6,12 +6,12 @@
     <title>Habits of Health Assessment</title>
     <style>
         :root {
-            /* Branding Colors extracted from your screenshots */
-            --bg-beige: #F4F2ED;       /* The warm background color */
-            --brand-rust: #C05A43;     /* The top border/logo stone color */
-            --brand-green: #7FAB56;    /* For positive results/progress */
-            --text-dark: #404041;      /* Dark grey for readability */
+            --bg-beige: #F0EFEA;       /* Matches screenshot background */
+            --brand-rust: #C05A43;     /* The top border color */
+            --brand-green: #7FAB56;    
+            --text-dark: #333333;      
             --card-white: #FFFFFF;
+            --btn-border: #D1D1D1;
         }
 
         body {
@@ -30,60 +30,46 @@
             background: var(--card-white);
             width: 100%;
             max-width: 600px;
-            border-radius: 15px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
             overflow: hidden;
             display: flex;
             flex-direction: column;
             min-height: 600px;
             position: relative;
-            border-top: 8px solid var(--brand-rust); /* The colored line at top */
+            /* The rust colored top border from screenshot */
+            border-top: 10px solid var(--brand-rust); 
         }
 
-        /* Logo Section */
+        /* Header */
         .header {
             text-align: center;
-            padding: 30px 20px 10px 20px;
+            padding: 40px 20px 20px 20px;
             background: #fff;
             border-bottom: 1px solid #f0f0f0;
         }
 
-        /* UPDATED: Logo size increased significantly */
         .app-logo {
-            max-width: 280px; /* Increased from 140px */
+            max-width: 160px; /* Adjusted size to look balanced */
             height: auto;
             display: block;
             margin: 0 auto;
         }
 
-        /* Progress Bar */
-        .progress-container {
-            background: #E0E0E0;
-            height: 6px;
-            width: 100%;
-        }
-
-        .progress-bar {
-            height: 100%;
-            background-color: var(--brand-green);
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-
         /* Content Area */
         .content-area {
-            padding: 40px;
+            padding: 30px 40px;
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: center; 
         }
 
         /* Typography */
         h1 {
             color: var(--text-dark);
             font-weight: 600;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             font-size: 1.8rem;
             text-align: center;
         }
@@ -93,61 +79,88 @@
             color: #666;
             font-size: 1.1rem;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
-        /* Question Text - Forced High Contrast */
+        /* Question Text Styling */
+        .question-container {
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
         .question-text {
-            font-size: 1.6rem;
-            color: #2C3E50; /* Dark Navy/Black */
-            font-weight: 700;
+            font-size: 1.5rem;
+            color: #333; /* Forced dark color */
+            font-weight: 600;
             text-align: center;
-            margin-bottom: 40px;
             line-height: 1.4;
-            display: block; 
         }
 
-        /* Buttons */
-        .btn {
-            padding: 18px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+        /* Answer Buttons */
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn-option {
             background: #fff;
-            color: #555;
-            font-size: 1.2rem;
+            border: 1px solid var(--btn-border);
+            border-radius: 6px;
+            padding: 20px;
+            font-size: 1.1rem;
             font-weight: 600;
+            color: #555;
+            text-align: left;
             cursor: pointer;
             transition: all 0.2s;
-            margin-bottom: 15px;
-            text-align: left;
-            padding-left: 30px;
-            display: block;
             width: 100%;
-            box-sizing: border-box; 
         }
 
-        .btn:hover {
+        .btn-option:hover {
             border-color: var(--brand-rust);
-            background-color: #FFF9F8; 
             color: var(--brand-rust);
+            background-color: #FAFAFA;
         }
 
-        .btn-primary {
+        .btn-start {
             background-color: var(--brand-rust);
             color: white;
-            text-align: center;
             border: none;
-            margin-top: 10px;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto;
+            font-weight: bold;
         }
 
-        .btn-primary:hover {
+        .btn-start:hover {
             background-color: #A04A36;
-            color: white;
         }
 
-        /* Utility classes for views */
-        .view { display: none; }
-        .view.active { display: flex; flex-direction: column; }
+        /* Progress Footer */
+        .footer-progress {
+            text-align: center;
+            color: #999;
+            font-size: 0.95rem;
+            margin-top: 40px;
+            padding-bottom: 20px;
+        }
+
+        /* View Management */
+        .view-section {
+            display: none;
+            width: 100%;
+        }
+        
+        .view-section.active {
+            display: block;
+        }
 
         /* Results Styling */
         .result-box {
@@ -156,9 +169,11 @@
             padding: 20px;
             margin-top: 20px;
             border-radius: 4px;
+            font-size: 1rem;
+            text-align: left;
         }
         
-        .result-box h3 { margin-top: 0; color: var(--brand-rust); }
+        .result-box h3 { margin-top: 0; color: var(--brand-rust); font-size: 1.2rem; }
         .result-box ul { padding-left: 20px; color: #555; }
         .result-box li { margin-bottom: 8px; }
 
@@ -174,13 +189,6 @@
         }
 
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        /* Mobile Adjustments */
-        @media (max-width: 600px) {
-            .app-logo { max-width: 200px; } /* Slightly smaller on mobile to fit screen */
-            .question-text { font-size: 1.3rem; }
-            .content-area { padding: 20px; }
-        }
     </style>
 </head>
 <body>
@@ -190,44 +198,44 @@
         <img src="hoh_logo.png" alt="Habits of Health" class="app-logo">
     </div>
 
-    <div class="progress-container">
-        <div id="progressBar" class="progress-bar"></div>
-    </div>
-
     <div class="content-area">
         
-        <div id="startView" class="view active">
+        <div id="view-intro" class="view-section active">
             <h1>Food Addiction Susceptibility</h1>
-            <p>This assessment helps you understand your relationship with sugar and refined flour, based on the <em>Habits of Health</em> system.</p>
-            <p>Identifying your predisposition is the first step to rewiring your brain and taking control.</p>
-            <button class="btn btn-primary" onclick="startQuiz()">Start Assessment</button>
+            <p>This assessment helps you understand your relationship with sugar and refined flour. Based on the <em>Habits of Health</em> system, identifying your predisposition is the first step to rewiring your brain.</p>
+            <button class="btn-start" onclick="startQuiz()">Begin Assessment</button>
         </div>
 
-        <div id="questionView" class="view">
-            <div id="questionText" class="question-text">Loading Question...</div>
+        <div id="view-quiz" class="view-section">
+            <div class="question-container">
+                <div id="question-text" class="question-text">
+                    </div>
+            </div>
 
-            <button class="btn" onclick="handleAnswer('Rarely')">Rarely</button>
-            <button class="btn" onclick="handleAnswer('Occasionally')">Occasionally</button>
-            <button class="btn" onclick="handleAnswer('Daily')">Daily</button>
+            <div class="options-grid">
+                <button class="btn-option" onclick="handleAnswer('Rarely')">Rarely</button>
+                <button class="btn-option" onclick="handleAnswer('Occasionally')">Occasionally</button>
+                <button class="btn-option" onclick="handleAnswer('Daily')">Daily</button>
+            </div>
             
-            <div style="text-align: center; margin-top: 30px; color: #999; font-size: 0.9rem;">
-                Question <span id="currentQNum">1</span> of 10
+            <div class="footer-progress">
+                Question <span id="q-current">1</span> of 10
             </div>
         </div>
 
-        <div id="loadingView" class="view">
-            <div style="text-align: center;">
+        <div id="view-loading" class="view-section">
+            <div style="text-align: center; padding-top: 40px;">
                 <div class="spinner"></div>
-                <h2>Analyzing Profile...</h2>
-                <p>Comparing your results against the Habits of Disease patterns...</p>
+                <h2 style="margin-top: 20px; font-size: 1.5rem;">Analyzing Profile...</h2>
+                <p>Calculating susceptibility patterns...</p>
             </div>
         </div>
 
-        <div id="resultsView" class="view">
+        <div id="view-results" class="view-section">
             <div style="text-align: center;">
-                <h2 id="resultTitle" style="font-size: 2rem; color: var(--brand-rust);"></h2>
-                <div id="resultContent"></div>
-                <button class="btn btn-primary" onclick="location.reload()">Retake Assessment</button>
+                <h2 id="result-title" style="color: var(--brand-rust);"></h2>
+                <div id="result-content"></div>
+                <button class="btn-start" style="margin-top: 30px;" onclick="location.reload()">Restart</button>
             </div>
         </div>
 
@@ -235,9 +243,9 @@
 </div>
 
 <script>
-    // --- Configuration & Data ---
+    // --- 1. Data Definitions ---
     [cite_start]// Source: Element-16.pdf [cite: 12-54]
-    const questions = [
+    var questions = [
         "1. I find it difficult to control how much I eat.",
         "2. I crash in the afternoon and have trouble waking up in the morning.",
         "3. I have cravings for specific foods.",
@@ -250,118 +258,99 @@
         "10. I crave carbohydrates like pasta, bread, white rice, or desserts."
     ];
 
-    // State Variables
-    let currentQuestionIndex = 0;
-    let scores = {
-        "Rarely": 0,
-        "Occasionally": 0,
-        "Daily": 0
-    };
+    var currentIndex = 0;
+    var scores = { "Rarely": 0, "Occasionally": 0, "Daily": 0 };
 
-    // --- Core Functions ---
+    // --- 2. Functions ---
 
-    // 1. Start the Quiz
     function startQuiz() {
-        // Reset state
-        currentQuestionIndex = 0;
+        // Switch to quiz view
+        switchView('view-quiz');
+        
+        // Reset Variables
+        currentIndex = 0;
         scores = { "Rarely": 0, "Occasionally": 0, "Daily": 0 };
         
-        // Show Question View
-        showView('questionView');
+        // Load first question
         renderQuestion();
     }
 
-    // 2. Render the current question
     function renderQuestion() {
-        const qTextEl = document.getElementById('questionText');
-        const qNumEl = document.getElementById('currentQNum');
-        const progressBar = document.getElementById('progressBar');
-
-        // Update Text
-        qTextEl.innerText = questions[currentQuestionIndex];
-        qNumEl.innerText = currentQuestionIndex + 1;
-
-        // Update Progress Bar
-        const progressPercentage = ((currentQuestionIndex) / questions.length) * 100;
-        progressBar.style.width = progressPercentage + '%';
+        var qTextEl = document.getElementById('question-text');
+        var qCountEl = document.getElementById('q-current');
+        
+        // Directly set text - no fade animation to prevent visibility bugs
+        qTextEl.innerText = questions[currentIndex];
+        qCountEl.innerText = currentIndex + 1;
     }
 
-    // 3. Handle User Input
     function handleAnswer(answer) {
-        // Record Score
+        // 1. Save Score
         scores[answer]++;
         
-        // Advance Index
-        currentQuestionIndex++;
+        // 2. Increment Index
+        currentIndex++;
 
-        // Check if finished
-        if (currentQuestionIndex < questions.length) {
+        // 3. Check if done
+        if (currentIndex < questions.length) {
             renderQuestion();
         } else {
-            // Finish
-            document.getElementById('progressBar').style.width = '100%';
             finishQuiz();
         }
     }
 
-    // 4. Transition to Loading then Results
     function finishQuiz() {
-        showView('loadingView');
-        
-        // Simulate calculation delay (1.5 seconds)
-        setTimeout(function() {
-            calculateAndDisplayResults();
-        }, 1500);
+        switchView('view-loading');
+        // Short delay to show loading state
+        setTimeout(showResults, 1500);
     }
 
-    // 5. Logic to determine result
-    function calculateAndDisplayResults() {
-        showView('resultsView');
+    function showResults() {
+        switchView('view-results');
 
-        [cite_start]// Scoring Logic (from Source: Element-16 [cite: 56-58])
-        // >6 in a category determines the result.
-        let resultCategory = "Mixed";
+        [cite_start]// Scoring Logic: >6 in a category determines result [cite: 56-58]
+        var result = "Mixed"; // Default
         if (scores["Daily"] > 6) {
-            resultCategory = "High";
+            result = "High";
         } else if (scores["Occasionally"] > 6) {
-            resultCategory = "Moderate";
+            result = "Moderate";
         } else if (scores["Rarely"] > 6) {
-            resultCategory = "Low";
+            result = "Low";
         }
 
-        // Generate Content based on Category
-        const titleEl = document.getElementById('resultTitle');
-        const contentEl = document.getElementById('resultContent');
+        var titleEl = document.getElementById('result-title');
+        var contentEl = document.getElementById('result-content');
 
-        titleEl.innerText = resultCategory + " Susceptibility";
+        titleEl.innerText = result + " Susceptibility";
 
-        let htmlContent = "";
+        // Generate Content based on result
+        var htmlContent = "";
 
-        if (resultCategory === "High") {
+        if (result === "High") {
             htmlContent = `
-                <p><strong>What this means:</strong> According to the "rat lever" study, you are highly susceptible to cues. The cue itself has become the reward.</p>
+                <p>According to the "rat lever" study, you are highly susceptible to cues. The cue itself has likely become the reward.</p>
                 <div class="result-box">
                     <h3>🛡️ Your Action Plan</h3>
                     <ul>
-                        <li><strong>Strict Avoidance:</strong> Because this is likely genetically predetermined, you must avoid sugary and starchy processed foods entirely to prevent relapse.</li>
-                        <li><strong>Green-Coded Foods:</strong> Stick to the green-coded chart. Avoiding sweet tastes helps calm dopamine receptors.</li>
+                        <li><strong>Strict Avoidance:</strong> This is likely genetically predetermined. You must avoid sugary and starchy processed foods entirely to prevent relapse.</li>
+                        <li><strong>Rewire:</strong> Stick to the green-coded chart. Avoiding sweet tastes helps calm dopamine receptors.</li>
                     </ul>
                 </div>
             `;
-        } else if (resultCategory === "Moderate") {
+        } else if (result === "Moderate") {
             htmlContent = `
-                <p><strong>What this means:</strong> Like the moderate group in the study, you interact with the "lever" sometimes. In our obesigenic world, you are at risk.</p>
+                <p>Like the moderate group in the study, you interact with the "lever" sometimes. In our obesigenic world, you are at risk.</p>
                 <div class="result-box">
                     <h3>🛡️ Your Action Plan</h3>
                     <ul>
-                        <li><strong>Be Vigilant:</strong> You may not need total abstinence, but you must be very cautious with processed foods containing hidden sugars.</li>
+                        <li><strong>Be Vigilant:</strong> You may not need total abstinence, but be very cautious with processed foods containing hidden sugars.</li>
                         <li><strong>Read Labels:</strong> Look for hidden sugar and flour.</li>
                     </ul>
                 </div>
             `;
         } else {
             htmlContent = `
-                <p><strong>What this means:</strong> You are like the group that only ate when hungry. You likely don't rely on food for emotional reward.</p>
+                <p>You are like the group that only ate when hungry. You likely don't rely on food for emotional reward.</p>
                 <div class="result-box">
                     <h3>🛡️ Your Action Plan</h3>
                     <ul>
@@ -372,25 +361,25 @@
             `;
         }
 
-        // Common advice for all (Stop. Challenge. Choose.)
+        // Add General Advice (Stop Challenge Choose)
         htmlContent += `
-            <div style="margin-top: 20px; text-align: left;">
+            <div style="margin-top: 20px; text-align: left; font-size: 0.95rem; color: #555;">
                 <p><strong>Next Steps:</strong></p>
                 <p>Use the <em>Stop. Challenge. Choose.™</em> method whenever you feel emotional tension or stress triggers.</p>
+                <p>Rely on the portion control plate system to avoid excessive calories.</p>
             </div>
         `;
 
         contentEl.innerHTML = htmlContent;
     }
 
-    // Helper: Switch Screens
-    function showView(viewId) {
-        // Hide all views
-        const views = document.querySelectorAll('.view');
-        views.forEach(v => v.classList.remove('active'));
-        
-        // Show specific view
-        document.getElementById(viewId).classList.add('active');
+    // Helper to hide/show sections
+    function switchView(id) {
+        var views = document.querySelectorAll('.view-section');
+        for (var i = 0; i < views.length; i++) {
+            views[i].classList.remove('active');
+        }
+        document.getElementById(id).classList.add('active');
     }
 
 </script>
